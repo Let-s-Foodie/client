@@ -12,6 +12,7 @@ const RandomFoods = (props) => {
                     // title ={food.item}
                       key = {food.id}
                      title ={food.title}
+                     img = {food.img}
                 />
             ))}
         </ul>

@@ -47,22 +47,40 @@ const MainPage = () => {
     //       }
 
     //     }); 
-   fetch('https://api.spoonacular.com/food/products/search?query=chips&apiKey=5318aee9097149ef8e07d2b4fa18cf99')
-     .then(response => {
-       return response.json();
-     }).then(data => {
-           console.log(data)
-        const foodsinfo = data.products.map(d => {
+  //  fetch('https://api.spoonacular.com/food/products/search?query=chips&apiKey=5318aee9097149ef8e07d2b4fa18cf99')
+  //    .then(response => {
+  //      return response.json();
+  //    }).then(data => {
+  //          console.log(data)
+  //       const foodsinfo = data.products.map(d => {
+  //         return {
+  //         title: d.title,
+  //         id: d.id,
+
+  //         }
+
+  //       }); 
+  //        setInfo(foodsinfo)
+  //    })
+    fetch('http://localhost:5000/random/feeds')
+      .then(res => {
+        if(res.status !== 200) {
+          throw new Error('Failed to fetch');
+        }
+        return res.json();
+      }).then(data => {
+        console.log(data.data)
+        const foodinfo = data.data.businesses.map((d) => {
           return {
-          title: d.title,
-          id: d.id,
-
+            title: d.name,
+            id: d.id,
+            img: d.image_url
           }
+        })
+        console.log(foodinfo)
+        setInfo(foodinfo)
 
-        }); 
-         setInfo(foodsinfo)
-     })
-    
+      })
   }, []);
   const fetchHandler = () => {
     // fetch('https://api.spoonacular.com/food/products/search?query=chips&apiKey=e44090275918492b9ff9446a5a728c79')
@@ -82,14 +100,15 @@ const MainPage = () => {
 
         for(let i =0; i < 3; i++){
           let rand = Math.floor(Math.random()*testfoodinfo.length);
-          console.log(rand)
+          // console.log(rand)
           let num = testfoodinfo[rand];
           foodarr_test.push(num);
           testfoodinfo.splice(rand,1);
         
         }
+        console.log(testfoodinfo.length)
         setInfo(testfoodinfo)
-        setTest((prevState) => [...prevState,...foodarr_test])
+        setTest((prevState) => [prevState,...foodarr_test])
        // console.log("array",testfoods)
       //})
   }
