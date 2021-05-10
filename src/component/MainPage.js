@@ -98,14 +98,19 @@ const MainPage = () => {
     //     }); 
         
 
-        for(let i =0; i < 3; i++){
-          let rand = Math.floor(Math.random()*testfoodinfo.length);
+        // for(let i =0; i < 3; i++){
+        //   let rand = Math.floor(Math.random()*testfoodinfo.length);
+        //   // console.log(rand)
+        //   let num = testfoodinfo[rand];
+        //   foodarr_test.push(num);
+        //   testfoodinfo.splice(rand,1);
+        
+        // }
+        let rand = Math.floor(Math.random()*testfoodinfo.length);
           // console.log(rand)
           let num = testfoodinfo[rand];
           foodarr_test.push(num);
           testfoodinfo.splice(rand,1);
-        
-        }
         console.log(testfoodinfo.length)
         setInfo(testfoodinfo)
         setTest((prevState) => [prevState,...foodarr_test])
