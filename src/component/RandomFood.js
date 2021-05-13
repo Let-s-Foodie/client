@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import axios from 'axios';
-import Aux from '../component/hoc/Aux';
+import Aux from './hoc/hoc';
 import DetailPage from './DetailPage/DetailPage';
 const RandomFood = ({ title, image,category,area }) => {
   const [details,setDetail] = useState([]);
