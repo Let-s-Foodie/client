@@ -2,7 +2,7 @@ import React,{useState} from "react";
 import axios from 'axios';
 import Aux from './hoc/hoc';
 import DetailPage from './DetailPage/DetailPage';
-const RandomFood = ({ title, image,category,area }) => {
+const RandomFood = ({ title, image,category,area,lat,lng }) => {
   const [details,setDetail] = useState([]);
   const detailHandler = () => {
       
@@ -11,7 +11,9 @@ const RandomFood = ({ title, image,category,area }) => {
         'title':title,
         'image':image,
         'category':category,
-        'area':area
+        'area':area,
+        'lat':lat,
+        'lng':lng
       }
       fetch(URL,{
         method: "POST",
@@ -44,6 +46,8 @@ const RandomFood = ({ title, image,category,area }) => {
           name={detail.name}
           image={detail.image_url}
           key={detail.id}
+          lat={lat}
+          lng={lng}
         />
       ))}
     </Aux>

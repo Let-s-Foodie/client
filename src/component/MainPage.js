@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
 import RandomFoods from "../component/RandomFoods";
 import axios from 'axios';
+import useGeoLocation from "./hooks/useGeoLocation";
+
 const MainPage = () => {
   let foodArr = [];
 
-  const [foodLists, setFoods] = useState([]);
+  const [foods, setFoods] = useState([]);
   const [foodInfo, setFoodInfo] = useState([]);
+  const {
+    loaded,
+    coordinates: { lat, lng },
+  } = useGeoLocation();
 
   // useEffect(() => {
   //   fetch("http://localhost:5000/random/feeds")
@@ -60,8 +66,19 @@ const MainPage = () => {
     <div className='main-page'>
       <h1>Google Food</h1>
       <button onClick={fetchHandler}>Search</button>
-      {foodLists.length? <RandomFoods foods={foodLists} /> : <div>GOOD LUCK</div>}
+     
       
+      {foods.length > 0 ? <RandomFoods foods={foods} lat={lat} lng={lng} /> : <div>GOOD LUCK</div>}
+      <div>
+        {loaded ? (
+          <>
+            <p>Your Latitude: {lat}</p>
+            <p>Your Longitude: {lng}</p>
+          </>
+        ) : (
+          "Location data not available yet"
+        )}
+      </div>
     </div>
   );
 };
