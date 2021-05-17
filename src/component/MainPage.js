@@ -4,7 +4,7 @@ import axios from 'axios';
 import useGeoLocation from "./hooks/useGeoLocation";
 
 const MainPage = () => {
-  let foodArr = [];
+  
 
   const [foods, setFoods] = useState([]);
   const [foodInfo, setFoodInfo] = useState([]);
@@ -13,27 +13,6 @@ const MainPage = () => {
     coordinates: { lat, lng },
   } = useGeoLocation();
 
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/random/feeds")
-  //     .then((res) => {
-  //       if (res.status !== 200) {
-  //         throw new Error("Failed to fetch");
-  //       }
-  //       console.log(res)
-  //       return res.json();
-  //     })
-  //     .then((data) => {
-  //       console.log(data)
-  //       const foodList = data.data.businesses.map((d) => {
-  //         return {
-  //           title: d.name,
-  //           id: d.id,
-  //           image: d.image_url,
-  //         };
-  //       });
-  //       setFoodInfo(foodList);
-  //     });
-  // }, []);
 
 
   const fetchHandler = () => {
