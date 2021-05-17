@@ -7,6 +7,7 @@ const MainPage = () => {
 
   const [foods, setFoods] = useState([]);
   const [foodInfo, setFoodInfo] = useState([]);
+
   const {
     loaded,
     coordinates: { lat, lng },
