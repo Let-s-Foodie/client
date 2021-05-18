@@ -3,6 +3,7 @@ import RandomFoods from "../component/RandomFoods";
 import axios from 'axios';
 import useGeoLocation from "./hooks/useGeoLocation";
 
+
 const MainPage = () => {
   
 
@@ -48,6 +49,7 @@ const MainPage = () => {
      
       
       {foods.length > 0 ? <RandomFoods foods={foods} lat={lat} lng={lng} /> : <div>GOOD LUCK</div>}
+    
       <div>
         {loaded ? (
           <>
