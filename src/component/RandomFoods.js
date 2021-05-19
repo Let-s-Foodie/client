@@ -5,15 +5,13 @@ const RandomFoods = ({ foods,lat,lng }) => {
   
   return (
     <ul>
-     
-       <RandomFood key={foods[0].id} 
-                  title={foods[0].title} 
-                  image={foods[0].image} 
-                  category={foods[0].category} 
-                  area={foods[0].area}
+
+        <RandomFood  
+                  title = {foods[0].title} 
+                 
                   lat={lat}
                   lng={lng}
-                  />
+          />           
     </ul>
   );
 };
