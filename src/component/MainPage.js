@@ -8,6 +8,7 @@ const MainPage = () => {
  
   const [foods, setFoods] = useState([]);
   const [foodInfo, setFoodInfo] = useState([]);
+
   const [foodCategory,setCategory] = useState([]);
   useEffect(() => {
      
@@ -26,6 +27,7 @@ const MainPage = () => {
       setCategory(data);
       
   },[]);
+
 
   const {
     loaded,
