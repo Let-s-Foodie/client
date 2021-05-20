@@ -1,11 +1,12 @@
 import React,{useState} from "react";
+import RestaurantModal from "../component/UI/RestaurantModal";
 import axios from 'axios';
 import Aux from './hoc/hoc';
-import DetailPage from './DetailPage/DetailPage';
 const RandomFood = ({ title,lat,lng }) => {
  
   
   const [details,setDetail] = useState([]);
+
   const detailHandler = () => {
       
       const URL = "http://localhost:5000/random/detail";
@@ -31,19 +32,21 @@ const RandomFood = ({ title,lat,lng }) => {
         setDetail(resData.data.businesses)
       })
   }
+  const cancleHandler = () => {
+    setDetail([]);
+  }
+  
   return (
     <Aux>
       <h2 onClick={detailHandler}>{title}</h2>
      
-      {details.length > 0 && details.map((detail) => (
-        <DetailPage 
-          name={detail.name}
-          image={detail.image_url}
-          key = {detail.id}
-          lat={lat}
-          lng={lng}
-        />
-      ))}
+      {details.length > 0 && 
+      <RestaurantModal 
+        lat={lat}
+        lng={lng}
+        details={details}
+        onCancle={cancleHandler}
+      />} 
     </Aux>
   );
 };
