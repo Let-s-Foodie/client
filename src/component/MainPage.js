@@ -4,6 +4,7 @@ import axios from 'axios';
 import useGeoLocation from "./hooks/useGeoLocation";
 import * as dataSet from "./Data/categories.json";
 
+
 const MainPage = () => {
  
   const [foods, setFoods] = useState([]);
@@ -62,6 +63,7 @@ const MainPage = () => {
       {loaded && <button onClick={categoriesHandler}>Search</button>}
       
       {foods.length > 0 ? <RandomFoods foods={foods} lat={lat} lng={lng} /> : <div>GOOD LUCK</div>}
+    
       <div>
         {loaded ? (
           <>
