@@ -1,8 +1,8 @@
 import React,{useState} from "react";
-import RestaurantModal from "../component/UI/RestaurantModal";
+import RestaurantModal from "../UI/RestaurantModal";
 import axios from 'axios';
-import Aux from './hoc/hoc';
-const RandomFood = ({ title,lat,lng }) => {
+import Aux from '../hoc/hoc';
+const RandomFood = ({ title,image,lat,lng }) => {
  
   
   const [details,setDetail] = useState([]);
@@ -39,7 +39,7 @@ const RandomFood = ({ title,lat,lng }) => {
   return (
     <Aux>
       <h2 onClick={detailHandler}>{title}</h2>
-     
+      <img alt="" src={image}/>
       {details.length > 0 && 
       <RestaurantModal 
         lat={lat}

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import RandomFoods from "../component/RandomFoods";
+
+import RandomFoods from "../RandomFoods";
+
 import axios from 'axios';
-import useGeoLocation from "./hooks/useGeoLocation";
-import * as dataSet from "./Data/categories.json";
-
-
+import useGeoLocation from "../hooks/useGeoLocation";
+import * as dataSet from "../Data/categories.json";
+import Aux from '../hoc/hoc';
+import "./MainPage.css";
 const MainPage = () => {
  
   const [foods, setFoods] = useState([]);
@@ -24,7 +26,7 @@ const MainPage = () => {
       let data = dataset.filter(function(el){
         return el != null;
       })
-      console.log(data)
+     
       setCategory(data);
       
   },[]);
@@ -45,10 +47,9 @@ const MainPage = () => {
        setCategory(foodCategory);
        const foodLists = {
          title: foodList[0].title,
-         
-        
-         
+          image:""         
        }
+       
        setFoods([foodLists])
       
        
@@ -57,24 +58,18 @@ const MainPage = () => {
  
  
   return (
-    <div className='main-page'>
-      <h1>Google Food</h1>
-  
-      {loaded && <button onClick={categoriesHandler}>Search</button>}
+   
+     <Aux className="main-page">
+      
+        {loaded && <button 
+                         onClick={categoriesHandler}>Get Started</button>}
       
       {foods.length > 0 ? <RandomFoods foods={foods} lat={lat} lng={lng} /> : <div>GOOD LUCK</div>}
     
-      <div>
-        {loaded ? (
-          <>
-            <p>Your Latitude: {lat}</p>
-            <p>Your Longitude: {lng}</p>
-          </>
-        ) : (
-          "Location data not available yet"
-        )}
-      </div>
-    </div>
+     </Aux>
+     
+     
+    
   );
 };
 
