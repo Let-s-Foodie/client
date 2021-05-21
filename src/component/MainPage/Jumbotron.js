@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import "./Jumbotron.css";
 const Jumbotron = () => {
     return (
-        <div className='main-page'>
+        <div className='jumbo-page'>
         <div className='main-title'>
           <h1>what am i <br/>gonna eat today?</h1>
           <h2>we got you</h2>

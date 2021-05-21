@@ -26,7 +26,7 @@ const MainPage = () => {
       let data = dataset.filter(function(el){
         return el != null;
       })
-     
+   
       setCategory(data);
       
   },[]);
@@ -45,6 +45,7 @@ const MainPage = () => {
        foodList.push(foodCategory[j]);
        foodCategory.splice(j,1);
        setCategory(foodCategory);
+       
        const foodLists = {
          title: foodList[0].title,
           image:""         
@@ -59,13 +60,26 @@ const MainPage = () => {
  
   return (
    
-     <Aux className="main-page">
+     <Aux>
+      <section className="main-page">
+      {!loaded && <div>Loading...</div>}
+     {loaded && foods.length == 0 && <button 
+                  onClick={categoriesHandler}>Get Started</button> 
+      }
+      {foods.length > 0 ? 
+        <RandomFoods 
+          foods={foods} 
+          lat={lat} 
+          lng={lng} 
+          randomHandler={categoriesHandler} /> : <div></div>}
+          
+
+
+
+   
+
+      </section>
       
-        {loaded && <button 
-                         onClick={categoriesHandler}>Get Started</button>}
-      
-      {foods.length > 0 ? <RandomFoods foods={foods} lat={lat} lng={lng} /> : <div>GOOD LUCK</div>}
-    
      </Aux>
      
      

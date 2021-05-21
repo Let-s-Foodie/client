@@ -1,7 +1,7 @@
 import React from "react";
 import RandomFood from "./RandomFood/RandomFood";
 
-const RandomFoods = ({ foods,lat,lng }) => {
+const RandomFoods = ({ foods,lat,lng,randomHandler }) => {
   
   return (
     <ul>
@@ -11,6 +11,7 @@ const RandomFoods = ({ foods,lat,lng }) => {
                   image= {foods[0].image}
                   lat={lat}
                   lng={lng}
+                  randomHandler={randomHandler}
           />           
     </ul>
   );
