@@ -1,16 +1,17 @@
 import React from "react";
-import RandomFood from "./RandomFood";
+import RandomFood from "./RandomFood/RandomFood";
 
-const RandomFoods = ({ foods,lat,lng }) => {
+const RandomFoods = ({ foods,lat,lng,randomHandler }) => {
   
   return (
     <ul>
 
         <RandomFood  
                   title = {foods[0].title} 
-                 
+                  image= {foods[0].image}
                   lat={lat}
                   lng={lng}
+                  randomHandler={randomHandler}
           />           
     </ul>
   );
