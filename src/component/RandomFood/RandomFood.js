@@ -29,7 +29,10 @@ const RandomFood = ({ title,image,lat,lng,randomHandler }) => {
         console.log(error);
       })
       .then(resData => {
-        setDetail(resData.data.businesses)
+      
+          setDetail(resData.data.businesses)
+      
+        
       })
   }
   const cancleHandler = () => {
