@@ -1,10 +1,25 @@
-import React from "react";
-import MainPage from "./component/MainPage";
-
+import {React} from "react";
+import MainPage from "./component/MainPage/MainPage";
+import {Route,Switch} from 'react-router-dom';
+import Jumbotron from "./component/MainPage/Jumbotron";
+import MainNavigation from "./component/Layout/MainNavigation";
 const App = () => {
   return (
     <>
-      <MainPage />
+      <MainNavigation/>
+     
+       
+          <Route exact path="/">
+            <Jumbotron/>
+          </Route>
+          <Route path="/mainpage">
+            <MainPage/>
+          </Route>
+        
+     
+      
+     
+      
     </>
   );
 };
