@@ -1,7 +1,7 @@
 import React from 'react';
 import Aux from '../hoc/hoc';
 import "./DetailPage.css";
-const DetailPage = ({name,image}) => {
+const DetailPage = ({name,image,link}) => {
    
 
     return (
@@ -12,6 +12,9 @@ const DetailPage = ({name,image}) => {
                 className="image"    
             />
             <div>{name}</div>
+            <div>homepage:{link.homepage}</div>
+            <div>Instagram:{link.instagram}</div>
+            <div>Facebook:{link.facebook}</div>
         </Aux>
     );
 }
