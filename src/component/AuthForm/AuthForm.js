@@ -1,11 +1,13 @@
-import {useState, useRef } from 'react';
+import {useState, useRef, useContext } from 'react';
+
 import classes from './AuthForm.module.css';
+import AuthContext from '../../store/auth-context';
 
 const AuthForm = () => {
     const [isLogin, setIsLogin ] = useState(true);
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
-
+    const authCtx = useContext(AuthContext);
 
 
     const switchAuthModeHandler = () => {
@@ -34,7 +36,7 @@ const AuthForm = () => {
                     'Content-Type': 'application/json'
                 }
             }
-            ).then(res => {
+            ).then((res) => {
                 if(res.ok){
                     return res.json()
                 } else {
@@ -45,7 +47,9 @@ const AuthForm = () => {
                     })
                 }
             }).then((data)=> {
-                console.log(data)
+                authCtx.login(data.idToken);
+                console.log(authCtx.token)
+               // console.log(data.idToken)
             })
             .catch((err)=> {
                 alert(err.message);
