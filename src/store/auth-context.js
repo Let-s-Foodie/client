@@ -12,7 +12,6 @@ export const AuthContextProvider = (props) => {
      const userIsLoggedIn = !!token; //if token is a string that is empty, this will return false
      const loginHandler = (token) => {
         setToken(token);
-        console.log("token", token)
     };
      const logoutHandler = () => {
          setToken(null);
