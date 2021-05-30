@@ -3,7 +3,7 @@ import MainPage from "./component/MainPage/MainPage";
 import {Route,Switch} from 'react-router-dom';
 import Jumbotron from "./component/MainPage/Jumbotron";
 import MainNavigation from "./component/Layout/MainNavigation";
-import SignupForm from '../src/component/SignupForm/SignupForm';
+import AuthForm from '../src/component/AuthForm/AuthForm';
 
 const App = () => {
   return (
@@ -18,7 +18,7 @@ const App = () => {
             <MainPage/>
           </Route>
           <Route path="/auth">
-            <SignupForm/>
+            <AuthForm/>
           </Route>
      
       

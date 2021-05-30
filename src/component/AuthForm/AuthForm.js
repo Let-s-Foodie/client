@@ -1,7 +1,7 @@
 import {useState, useRef } from 'react';
-import classes from './SignupForm.module.css';
+import classes from './AuthForm.module.css';
 
-const SignupForm = () => {
+const AuthForm = () => {
     const [isLogin, setIsLogin ] = useState(true);
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
@@ -16,11 +16,13 @@ const SignupForm = () => {
         const enteredEmail = emailInputRef.current.value;
         const enteredPassword = passwordInputRef.current.value;
         //Add Validation
-        
+        let url;
         if(isLogin) {
-
+            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDSqPwVXMpohF0vOm95pZ6kadMTQ8fd6w8';
         } else {
-            fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDSqPwVXMpohF0vOm95pZ6kadMTQ8fd6w8',
+            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDSqPwVXMpohF0vOm95pZ6kadMTQ8fd6w8';
+        }
+            fetch(url,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -34,16 +36,22 @@ const SignupForm = () => {
             }
             ).then(res => {
                 if(res.ok){
-                    console.log(res)
+                    return res.json()
                 } else {
                     return res.json().then((data)=> {
                        //show error modal
-                        console.log(data);
+                       let errorMessage = 'Authentication Failed';
+                      throw new Error(errorMessage);
                     })
                 }
+            }).then((data)=> {
+                console.log(data)
+            })
+            .catch((err)=> {
+                alert(err.message);
             })
 
-        }
+        
 
     }
     return (
@@ -107,4 +115,4 @@ const SignupForm = () => {
         </section>
     )
 }
-export default SignupForm;
+export default AuthForm;
