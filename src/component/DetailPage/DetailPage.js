@@ -1,7 +1,6 @@
 import React from 'react';
 import Aux from '../hoc/hoc';
-import classes "./DetailPage.module.css";
-
+import "./DetailPage.css";
 const DetailPage = ({name,image,link}) => {
    
 
