@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import "./RestaurantModal.css";
+import classes from "./RestaurantModal.module.css";
 import Hoc from '../hoc/hoc';
 import DetailPage from '../DetailPage/DetailPage';
 const Backdrop = ({onCancle}) => {
-    return  <div className="backdrop" onClick={onCancle} />;
+    return  <div className={classes.backdrop} onClick={onCancle} />;
 }
 const ModalOverlay = ({lat,lng,details}) => {
     console.log("modal" + details)
     return (
 
-        <div className="modal">
-        <div className="content">
+        <div className={classes.modal}>
+        <div className={classes.content}>
             {/* feature 1.2.7/yelpJson  */}
             {/* 
             {details.map((detail) => (
