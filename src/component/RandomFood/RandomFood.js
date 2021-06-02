@@ -49,7 +49,6 @@ const RandomFood = ({ title,image,lat,lng,randomHandler,link,seller,category }) 
       image_url: image,
       link: link
     }
-    console.log(businessesDetail)
     setDetail(businessesDetail)
   
   }
@@ -76,8 +75,6 @@ const RandomFood = ({ title,image,lat,lng,randomHandler,link,seller,category }) 
       console.log(error);
     })
     .then(resData => {
-    
-        console.log(resData)
         setHashtag(resData.data.businesses);
       
     })
@@ -128,7 +125,7 @@ const RandomFood = ({ title,image,lat,lng,randomHandler,link,seller,category }) 
       />}  */}
 {/* feature-1.2.2 use hardcorded instead of yelp json file*/}
 
-<div className="max-w-xs rounded overflow-hidden shadow-lg my-2">
+<div className="max-w-md rounded overflow-hidden shadow-lg my-3">
         <img className="w-full" src={image}/>
         <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2">{title}</div>
