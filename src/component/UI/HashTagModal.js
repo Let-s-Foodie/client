@@ -1,18 +1,18 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import "./HashTagModal.css";
+import classes from "./HashTagModal.module.css";
 import Hoc from '../hoc/hoc';
 
 import HashTagDetail from '../DetailPage/HashtagDetail';
 const Backdrop = ({onCancle}) => {
-    return  <div className="backdrop" onClick={onCancle} />;
+    return  <div className={classes.backdrop} onClick={onCancle} />;
 }
 const ModalOverlay = ({lat,lng,details}) => {
     console.log("modal" + details)
     return (
 
-        <div className="modal">
-        <div className="content">
+        <div className={classes.modal}>
+        <div className={classes.content}>
         
           
         
