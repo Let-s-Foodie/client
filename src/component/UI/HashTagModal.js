@@ -4,11 +4,11 @@ import classes from "./HashTagModal.module.css";
 import Hoc from '../hoc/hoc';
 
 import HashTagDetail from '../DetailPage/HashtagDetail';
-const Backdrop = ({onCancle}) => {
-    return  <div className={classes.backdrop} onClick={onCancle} />;
+const Backdrop = ({onCancel}) => {
+    return  <div className={classes.backdrop} onClick={onCancel} />;
 }
 const ModalOverlay = ({lat,lng,details}) => {
-    console.log("modal" + details)
+   
     return (
 
         <div className={classes.modal}>
@@ -17,7 +17,7 @@ const ModalOverlay = ({lat,lng,details}) => {
           
         
               {details.map((detail) => (
-                 <HashTagDetail detail ={detail}/>
+                 <HashTagDetail key={detail.id} detail ={detail}/>
             
             ))}
           
@@ -27,13 +27,13 @@ const ModalOverlay = ({lat,lng,details}) => {
    
     )
 }
-const HashTagModal = ({lat,lng,details, onCancle}) => {
+const HashTagModal = ({lat,lng,details, onCancel}) => {
     return (
         <Hoc>
            
             
             {ReactDom.createPortal(
-                <Backdrop onCancle={onCancle}/>,
+                <Backdrop onCancel={onCancel}/>,
                  document.getElementById('backdrop-root'))}
             {ReactDom.createPortal(
                 <ModalOverlay lat ={lat} lng={lng} details={details}/>,
