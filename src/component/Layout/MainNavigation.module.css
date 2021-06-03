@@ -9,7 +9,7 @@
   }
   
   .logo {
-    max-width: 5vh;
+    width: 55px;
     color: white;
     display: inline-block;
     box-sizing: inherit;
@@ -39,4 +39,6 @@
   .nav a.active {
     color: #e6fcfc;
   }
-  
+  .hamburger{
+    width: 7rem;
+  }
