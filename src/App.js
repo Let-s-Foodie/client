@@ -2,12 +2,14 @@ import {React,useContext,useState} from "react";
 
 import MainPage from "./pages/MainPage";
 import {Route,Switch, Redirect} from 'react-router-dom';
-import Jumbotron from "./component/HeroSection/Jumbotron";
 import HeroSection from "./component/HeroSection";
 import Navbar from "./component/Navbar";
 import AuthForm from '../src/component/AuthForm/AuthForm';
 import AuthContext from './store/auth-context';
 import Sidebar from "./component/Sidebar";
+import InfoSection from "./component/InfoSection";
+import {homeObjOne,homeObjTwo} from './component/InfoSection/Data';
+import Services from "./component/Services";
 const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => {
@@ -23,7 +25,12 @@ const App = () => {
           <Route exact path="/">
             {/* <Jumbotron/> */}
             <HeroSection/>
+             <Services/>
+         
+            <InfoSection {...homeObjTwo}/>
+            <InfoSection {...homeObjOne}/>
           </Route>
+        
           <Route path="/mainpage">
             <MainPage/>
           </Route>

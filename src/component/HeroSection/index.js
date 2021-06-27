@@ -13,7 +13,7 @@ const HeroSection = () => {
                 <VideoBg autoPlay loop muted src={Video} type='video/mp4' />
             </HeroBg>
             <HeroContent>
-                <HeroH1>what am I gonna eat?</HeroH1>
+                <HeroH1>Restaurants, and more</HeroH1>
                 <HeroP>
                     We got you!
                 </HeroP>
