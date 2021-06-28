@@ -50,11 +50,23 @@ const AuthForm = () => {
             }).then((data)=> {
                 const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
                 authCtx.login(data.idToken, expirationTime.toISOString());
-                axios.request({
-                    url: "http://localhost:5000/dishes",
-                    method: 'POST',
-                    headers: {'authtoken': data.idToken}
-                })
+                // axios.request({
+                //     url: "http://localhost:5000/dishes",
+                //     method: 'POST',
+                //     headers: {'authtoken': data.idToken}
+                // })
+                fetch("http://localhost:5000/users",{
+                    method: "POST",
+                    body: JSON.stringify({
+                        email: data.email,
+                        role: "user"
+                    }),
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                      }
+                }).then((res) => console.log(res))
+                console.log(data)
                 history.replace('/')// redirect user to main page
             })
             .catch((err)=> {
