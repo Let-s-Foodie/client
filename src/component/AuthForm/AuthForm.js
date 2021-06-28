@@ -1,5 +1,6 @@
 import {useState, useRef, useContext } from 'react';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 import classes from './AuthForm.module.css';
 import AuthContext from '../../store/auth-context';
 
@@ -49,6 +50,11 @@ const AuthForm = () => {
             }).then((data)=> {
                 const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
                 authCtx.login(data.idToken, expirationTime.toISOString());
+                axios.request({
+                    url: "http://localhost:5000/dishes",
+                    method: 'POST',
+                    headers: {'authtoken': data.idToken}
+                })
                 history.replace('/')// redirect user to main page
             })
             .catch((err)=> {

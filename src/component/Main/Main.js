@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
-import RandomFood from "../component/RandomFood/RandomFood";
-import useGeoLocation from "../component/hooks/useGeoLocation";
-import Aux from '../component/hoc/hoc';
-import "./MainPage.css";
-const MainPage = () => {
+import React, { useState, useEffect,useContext } from "react";
+import AuthContext from '../../store/auth-context';
+import RandomFood from "../RandomFood/RandomFood";
+import useGeoLocation from "../hooks/useGeoLocation";
+import Aux from '../hoc/hoc';
+import "./Main.css";
+const Main = () => {
 
   const [foodFeed, setFoodfeed] = useState([]);
   const [foodInfo, setFoodinfo] = useState([]);
 
-
-
+  
+  const authCtx = useContext(AuthContext);
   useEffect(() => {
    
     const URL = "http://localhost:5000/dishes";
@@ -17,7 +18,6 @@ const MainPage = () => {
     .then((res)=>{return res.json()})
     .then((data)=> {
 
-    console.log("database",data)
     
     setFoodinfo(data);
     })
@@ -89,4 +89,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default Main;
