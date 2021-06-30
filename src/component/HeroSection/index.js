@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {HeroContainer, HeroBg, VideoBg, HeroContent, HeroH1,HeroP,HeroBtnWrapper,ArrowForward,ArrowRight} from './HeroElement';
 import Video from '../../videos/video.mp4';
-import { Button } from '../ButtonElement';
+import { ButtonR } from '../ButtonElement';
 const HeroSection = () => {
     const [hover,setHover] = useState(false);
     const onHover = () => {
@@ -18,14 +18,14 @@ const HeroSection = () => {
                     We got you!
                 </HeroP>
                 <HeroBtnWrapper>
-                    <Button to='/mainpage'
+                    <ButtonR to='/mainpage'
                         onMouseEnter={onHover}
                         onMouseLeave={onHover}
                         primary='true'
                         dark='true'
                     >
                         Get started{hover ? <ArrowForward/> : <ArrowRight/>}
-                    </Button>
+                    </ButtonR>
                 </HeroBtnWrapper>
             </HeroContent>
         </HeroContainer>

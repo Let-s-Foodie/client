@@ -24,27 +24,28 @@ const Navbar = ({toggle}) => {
         <>
             <Nav scrollNav={scrollNav}>
                 <NavbarContainer>
-                    <NavLogo scrollNav={scrollNav} to ='/'>
+                    <NavLogo to ='/' scrollnav={scrollNav ? 1 : 0}>
                         Randi
                     </NavLogo>
-                    <MobileIcon scrollNav={scrollNav} onClick={toggle}>
+                    <MobileIcon  onClick={toggle}>
                         <FaBars/>
                     </MobileIcon>
                     <NavMenu>
                         <NavItem>
-                            <NavLinks scrollNav={scrollNav} to ='about'>About</NavLinks>
+                            <NavLinks to ='services' scrollnav={scrollNav ? 1 : 0}>Services</NavLinks>
                         </NavItem>
                         <NavItem>
-                            <NavLinks scrollNav={scrollNav} to ='discover'>Discover</NavLinks>
+                            <NavLinks to ='about' scrollnav={scrollNav ? 1 : 0} >About</NavLinks>
                         </NavItem>
                         <NavItem>
-                            <NavLinks scrollNav={scrollNav} to ='services'>Services</NavLinks>
+                            <NavLinks to ='discover' scrollnav={scrollNav ? 1 : 0}>Discover</NavLinks>
                         </NavItem>
+                       
                         
                     </NavMenu>
                     {!isLoggedIn &&
                         <NavBtn>
-                            <NavBtnLink scrollNav={scrollNav} to ='/auth'>Sign In</NavBtnLink>
+                            <NavBtnLink to ='/auth'>Sign In</NavBtnLink>
                         </NavBtn>
                     }
 

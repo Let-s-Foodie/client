@@ -1,7 +1,6 @@
 import React,{useState} from "react";
 import RestaurantModal from "../UI/RestaurantModal";
 import HashTagModal from "../UI/HashTagModal";
-import axios from 'axios';
 import Aux from '../hoc/hoc';
 const RandomFood = ({ title,image,lat,lng,randomHandler,seller,category }) => {
  
@@ -9,34 +8,6 @@ const RandomFood = ({ title,image,lat,lng,randomHandler,seller,category }) => {
   const [details,setDetail] = useState([]);
   const [hashtagDetails, setHashtag] = useState([]);
 
-  const detailHandler = () => {
-      
-      const URL = "http://localhost:5000/random/detail";
-      const data = {
-        'title':title,
-        'lat':lat,
-        'lng':lng
-      }
-      fetch(URL,{
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-          'Content-Type': 'application/json'
-        },
-      }) 
-      .then((res)=>{
-        return res.json();
-      },(error) => {
-        console.log(error);
-      })
-      .then(resData => {
-      
-          setDetail(resData.data.businesses)
-      
-        
-      })
-  }
 
   const cancelHandler = () => {
     setDetail([]);

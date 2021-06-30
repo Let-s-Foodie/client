@@ -5,7 +5,7 @@ const useGeoLocation = () => {
     loaded: false,
     coordinates: { lat: "", lng: "" },
   });
-
+  
   const onSuccess = (position) => {
     const { longitude, latitude } = position.coords;
     setLocation({

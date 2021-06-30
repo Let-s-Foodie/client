@@ -13,8 +13,7 @@ export const Nav = styled.nav`
     top: 0;
     z-index: 10;
     margin-top: -80px;
-
-
+    
     @media screen and (max-width: 960px){
         transition: 0.8s all ease;
     }
@@ -28,10 +27,12 @@ export const NavbarContainer = styled.div`
     width: 100%;
     padding: 0 24px;
     max-width: 1100px;
+   
+
 `;
 
 export const NavLogo = styled(LinkR)`
-    color: ${({scrollNav}) => (scrollNav ? 'rgb(80,35,20)': '#fff')};
+    color: ${({scrollnav}) => (scrollnav ? 'rgb(80,35,20)': '#fff')};
     display: flex;
     justify-self: flex-start;
     cursor: pointer;
@@ -73,7 +74,7 @@ export const NavItem = styled.li`
 
 
 export const NavLinks = styled(LinkS)`
-    color: ${({scrollNav}) => (scrollNav ? 'rgb(80,35,20)': '#fff')};
+    color: ${({scrollnav}) => (scrollnav ? 'rgb(80,35,20)': '#fff')};
     display: flex;
     align-items: center;
     text-decoration: none;

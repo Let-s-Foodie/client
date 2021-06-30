@@ -1,5 +1,4 @@
-import React, { useState, useEffect,useContext } from "react";
-import AuthContext from '../../store/auth-context';
+import React, { useState, useEffect} from "react";
 import RandomFood from "../RandomFood/RandomFood";
 import useGeoLocation from "../hooks/useGeoLocation";
 import Aux from '../hoc/hoc';
@@ -9,8 +8,7 @@ const Main = () => {
   const [foodFeed, setFoodfeed] = useState([]);
   const [foodInfo, setFoodinfo] = useState([]);
 
-  
-  const authCtx = useContext(AuthContext);
+
   useEffect(() => {
    
     const URL = "http://localhost:5000/dishes";
@@ -20,6 +18,7 @@ const Main = () => {
 
     
     setFoodinfo(data);
+   console.log(data)
     })
     return () => {
       setFoodinfo({});
@@ -36,16 +35,17 @@ const Main = () => {
   const foodListHandler = () => {
     let foodArr = [];
     let i = foodInfo.length;
-   
+    
     let j = Math.floor(Math.random() * (i));
     foodArr.push(foodInfo[j]);
     foodInfo.splice(j,1);
     setFoodinfo(foodInfo);
+    console.log("seller",)
     const foods = {
       title: foodArr[0].name,
       image: foodArr[0].image,
       category: foodArr[0].category,
-      seller: foodArr[0].seller,
+      seller: foodArr[0].sellerId,
       id:foodArr[0].id
     };
    
