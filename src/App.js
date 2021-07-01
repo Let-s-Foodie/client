@@ -1,37 +1,30 @@
 import {React,useContext} from "react";
 
-import MainPage from "./component/MainPage/MainPage";
-import {Route,Switch, Redirect} from 'react-router-dom';
-import Jumbotron from "./component/MainPage/Jumbotron";
-import MainNavigation from "./component/Layout/MainNavigation";
+import Main from "./component/Main/Main";
+import {BrowserRouter as Router,Route,Switch, Redirect} from 'react-router-dom';
 import AuthForm from '../src/component/AuthForm/AuthForm';
+import SellerPage from './pages/SellerPage';
 import AuthContext from './store/auth-context';
+import Home from "./pages/home";
+
 const App = () => {
+
   const authCtx = useContext(AuthContext);
+  
   return (
-    <>
-      <MainNavigation/>
-     
-       
-          <Route exact path="/">
-            <Jumbotron/>
-          </Route>
-          <Route path="/mainpage">
-            <MainPage/>
-          </Route>
-          {!authCtx.isLoggedIn &&
-          (<Route path="/auth">
-            <AuthForm/>
-          </Route>)}
-        
-            <Route path="*">
-              <Redirect to ='/' />
-              {/* OR just showing 404 page */}
-            </Route>
+    <Router>
+
+      <Switch>
+          <Route path="/" component={Home} exact />
+          {!authCtx.isLoggedIn && <Route path="/auth" component={AuthForm} />}
+          <Route path="/mainpage" component={Main} exact />
+          <Route path="/seller/dishes" component={SellerPage} exact/>
+          <Route path ="*" component={Redirect} />
+         
+      </Switch>
+   
       
-     
-      
-    </>
+    </Router>
   );
 };
 
