@@ -32,3 +32,20 @@ export const homeObjTwo = {
     darkText: true
 
 }
+export const homeObjThree = {
+    id: '',
+    lightBg: false,
+    lightText: false,
+    lightTextDesc: false,
+    topLine: 'it will be Footer',
+    headline: 'it will be Footer',
+    description: 'Get access to our exclusive app that allow you to send unlimited transaction without getting charged any fee.',
+    buttonLabel: 'Get started',
+    imgStart: true,
+    img: require('../../static/svg-1.svg').default,
+    alt: 'Car',
+    dark: true,
+    primary: true,
+    darkText: true
+
+}

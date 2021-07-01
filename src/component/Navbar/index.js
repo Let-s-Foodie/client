@@ -1,4 +1,5 @@
 import React,{useContext,useState,useEffect} from 'react';
+import {animateScroll as scroll} from 'react-scroll';
 import AuthContext from '../../store/auth-context';
 import {FaBars} from 'react-icons/fa';
 import {Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks, NavBtn, NavBtnLink} from './NavbarElement';
@@ -20,11 +21,15 @@ const Navbar = ({toggle}) => {
     const logoutHandler = () => {
         authCtx.logout();
     }
+
+    const toggleHome = () => {
+        scroll.scrollToTop();
+    }
     return (
         <>
             <Nav scrollNav={scrollNav}>
                 <NavbarContainer>
-                    <NavLogo to ='/' scrollnav={scrollNav ? 1 : 0}>
+                    <NavLogo to ='/'  onClick={toggleHome} scrollnav={scrollNav ? 1 : 0}>
                         Randi
                     </NavLogo>
                     <MobileIcon  onClick={toggle}>
@@ -32,13 +37,26 @@ const Navbar = ({toggle}) => {
                     </MobileIcon>
                     <NavMenu>
                         <NavItem>
-                            <NavLinks to ='services' scrollnav={scrollNav ? 1 : 0}>Services</NavLinks>
+                            <NavLinks 
+                                to ='services' 
+                                scrollnav={scrollNav ? 1 : 0}
+                                smooth={true} duration={500} spy={true}
+                                exact='true' offset={-80}
+                                >Services</NavLinks>
                         </NavItem>
                         <NavItem>
-                            <NavLinks to ='about' scrollnav={scrollNav ? 1 : 0} >About</NavLinks>
+                            <NavLinks 
+                                to ='about' 
+                                scrollnav={scrollNav ? 1 : 0}
+                                smooth={true} duration={500} spy={true}
+                                exact='true' offset={-80} >About</NavLinks>
                         </NavItem>
                         <NavItem>
-                            <NavLinks to ='discover' scrollnav={scrollNav ? 1 : 0}>Discover</NavLinks>
+                            <NavLinks 
+                                to ='discover' 
+                                scrollnav={scrollNav ? 1 : 0}
+                                smooth={true} duration={500} spy={true}
+                                exact='true' offset={-80}>Discover</NavLinks>
                         </NavItem>
                        
                         

@@ -3,7 +3,7 @@ import Sidebar from '../component/Sidebar';
 import Navbar from '../component/Navbar';
 import HeroSection from '../component/HeroSection';
 import InfoSection from '../component/InfoSection';
-import { homeObjOne,homeObjTwo } from '../component/InfoSection/Data';
+import { homeObjOne,homeObjTwo,homeObjThree } from '../component/InfoSection/Data';
 import Services from '../component/Services';
 import useGeoLocation from "../component/hooks/useGeoLocation";
 const Home = () => {
@@ -49,7 +49,8 @@ const Home = () => {
             <Services local={local} loaded={loadedLocal ? 1: 0}/> 
             <InfoSection {...homeObjOne}/>
             <InfoSection {...homeObjTwo}/>
-           
+            <InfoSection {...homeObjThree}/>
+            
         </>
     )
 }

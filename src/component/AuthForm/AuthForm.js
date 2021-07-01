@@ -1,7 +1,7 @@
 import {useState, useRef, useContext } from 'react';
 import {useHistory} from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
-
+import axios from 'axios';
 const AuthForm = () => {
     const [isLogin, setIsLogin ] = useState(true);
     const emailInputRef = useRef();
@@ -29,7 +29,8 @@ const AuthForm = () => {
                         returnSecureToken: true
                     }),
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                      
                     }
                 }
                 ).then((res) => {
@@ -45,11 +46,11 @@ const AuthForm = () => {
                 }).then((data)=> {
                     const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
                     authCtx.login(data.idToken, expirationTime.toISOString());
-                    // axios.request({
-                    //     url: "http://localhost:5000/dishes",
-                    //     method: 'POST',
-                    //     headers: {'authtoken': data.idToken}
-                    // })
+                    axios.request({
+                        url: "http://localhost:5000",
+                        method: 'POST',
+                        headers: {'authtoken': data.idToken}
+                    })
                    
                     history.replace('/')// redirect user to main page
                 })
@@ -83,16 +84,11 @@ const AuthForm = () => {
                     }
                 }).then((data)=> {
                    
-                    // axios.request({
-                    //     url: "http://localhost:5000/dishes",
-                    //     method: 'POST',
-                    //     headers: {'authtoken': data.idToken}
-                    // })
                     fetch("http://localhost:5000/users",{
                         method: "POST",
                         body: JSON.stringify({
                             email: data.email,
-                            role: "seller"
+                            role: "user"
                         }),
                         headers: {
                             'Accept': 'application/json, text/plain, */*',
