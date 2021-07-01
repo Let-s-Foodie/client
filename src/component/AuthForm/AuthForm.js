@@ -1,8 +1,7 @@
 import {useState, useRef, useContext } from 'react';
 import {useHistory} from 'react-router-dom';
-import classes from './AuthForm.module.css';
 import AuthContext from '../../store/auth-context';
-
+import axios from 'axios';
 const AuthForm = () => {
     const [isLogin, setIsLogin ] = useState(true);
     const emailInputRef = useRef();
@@ -21,39 +20,90 @@ const AuthForm = () => {
         let url;
         if(isLogin) {
             url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDSqPwVXMpohF0vOm95pZ6kadMTQ8fd6w8';
+            fetch(url,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email:enteredEmail,
+                        password: enteredPassword,
+                        returnSecureToken: true
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                      
+                    }
+                }
+                ).then((res) => {
+                    if(res.ok){
+                        return res.json()
+                    } else {
+                        return res.json().then((data)=> {
+                           //show error modal
+                           let errorMessage = 'Authentication Failed';
+                          throw new Error(errorMessage);
+                        })
+                    }
+                }).then((data)=> {
+                    const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
+                    authCtx.login(data.idToken, expirationTime.toISOString());
+                    axios.request({
+                        url: "http://localhost:5000",
+                        method: 'POST',
+                        headers: {'authtoken': data.idToken}
+                    })
+                   
+                    history.replace('/')// redirect user to main page
+                })
+                .catch((err)=> {
+                    alert(err.message);
+                })
+    
         } else {
             url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDSqPwVXMpohF0vOm95pZ6kadMTQ8fd6w8';
-        }
             fetch(url,
-            {
-                method: 'POST',
-                body: JSON.stringify({
-                    email:enteredEmail,
-                    password: enteredPassword,
-                    returnSecureToken: true
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email:enteredEmail,
+                        password: enteredPassword,
+                        returnSecureToken: true
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
-            }
-            ).then((res) => {
-                if(res.ok){
-                    return res.json()
-                } else {
-                    return res.json().then((data)=> {
-                       //show error modal
-                       let errorMessage = 'Authentication Failed';
-                      throw new Error(errorMessage);
-                    })
-                }
-            }).then((data)=> {
-                const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
-                authCtx.login(data.idToken, expirationTime.toISOString());
-                history.replace('/')// redirect user to main page
-            })
-            .catch((err)=> {
-                alert(err.message);
-            })
+                ).then((res) => {
+                    if(res.ok){
+                        return res.json()
+                    } else {
+                        return res.json().then((data)=> {
+                           //show error modal
+                           let errorMessage = 'Authentication Failed';
+                          throw new Error(errorMessage);
+                        })
+                    }
+                }).then((data)=> {
+                   
+                    fetch("http://localhost:5000/users",{
+                        method: "POST",
+                        body: JSON.stringify({
+                            email: data.email,
+                            role: "user"
+                        }),
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                          }
+                    }).then((res) => console.log(res))
+                    console.log(data)
+                    history.replace('/')
+                })
+                .catch((err)=> {
+                    alert(err.message);
+                })
+    
+        }
+            
 
         
 
