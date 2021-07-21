@@ -1,14 +1,43 @@
 import {useState, useRef, useContext } from 'react';
 import {useHistory} from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
-import axios from 'axios';
+import useInput from '../hooks/use-input';
+
+const emailPattern =  new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/);
+const isEmail = (value) => emailPattern.test(value);
+const isPassword = (value) => passwordPattern.test(value);
 const AuthForm = () => {
     const [isLogin, setIsLogin ] = useState(true);
+    const [isvalidEmail, setValidEmail] = useState(false);
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
     const authCtx = useContext(AuthContext);
     const history = useHistory();
 
+
+
+    const {
+        value: emailValue,
+        isValid: emailIsValid,
+        hasError: emailHasError,
+        valueChangeHandler: emailChangeHandler,
+        inputBlurHandler: emailBlurHandler,
+        reset: resetEmail
+    } = useInput(isEmail);
+
+    const {
+        value: passwordValue,
+        isValid: passwordIsValid,
+        hasError: passwordHasError,
+        valueChangeHandler: passwordChangeHandler,
+        inputBlurHandler: passwordBlurHandler,
+        reset: resetPassword
+    } = useInput(isPassword);
+    let formIsValid = false;
+    if(emailIsValid && passwordIsValid){
+        formIsValid = true;
+    }
     const switchAuthModeHandler = () => {
         setIsLogin((prevState) => !prevState);
     };
@@ -17,9 +46,11 @@ const AuthForm = () => {
         const enteredEmail = emailInputRef.current.value;
         const enteredPassword = passwordInputRef.current.value;
         //Add Validation
+       
         let url;
         if(isLogin) {
-            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDSqPwVXMpohF0vOm95pZ6kadMTQ8fd6w8';
+            
+            url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY}`;
             fetch(url,
                 {
                     method: 'POST',
@@ -46,20 +77,20 @@ const AuthForm = () => {
                 }).then((data)=> {
                     const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
                     authCtx.login(data.idToken, expirationTime.toISOString());
-                    axios.request({
-                        url: "http://localhost:5000",
-                        method: 'POST',
-                        headers: {'authtoken': data.idToken}
-                    })
+                  
                    
                     history.replace('/')// redirect user to main page
                 })
                 .catch((err)=> {
                     alert(err.message);
                 })
-    
+                resetEmail();
+                resetPassword();
         } else {
-            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDSqPwVXMpohF0vOm95pZ6kadMTQ8fd6w8';
+            if(!formIsValid){
+                return;
+            }
+            url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY}`;
             fetch(url,
                 {
                     method: 'POST',
@@ -78,17 +109,17 @@ const AuthForm = () => {
                     } else {
                         return res.json().then((data)=> {
                            //show error modal
-                           let errorMessage = 'Authentication Failed';
+                           let errorMessage = data.error.errors[0].message;
                           throw new Error(errorMessage);
                         })
                     }
                 }).then((data)=> {
                    
-                    fetch("http://localhost:5000/users",{
+                    fetch("http://localhost:8080/users/signup",{
                         method: "POST",
                         body: JSON.stringify({
                             email: data.email,
-                            role: "user"
+                            role: "seller"
                         }),
                         headers: {
                             'Accept': 'application/json, text/plain, */*',
@@ -113,7 +144,7 @@ const AuthForm = () => {
           
             <div className="bg-white lg:w-4/12 md:6/12 w-10/12 m-auto my-10 shadow-md">
                 <div className="py-8 px-8 rounded-xl">
-    <h1 className="font-medium text-2xl mt-3 text-center">{isLogin ? 'Login' : 'Create an Account'}</h1>
+                    <h1 className="font-medium text-2xl mt-3 text-center">{isLogin ? 'Login' : 'Create an Account'}</h1>
                     <form onSubmit={submitHandler} className="mt-6">
                         <div className="my-5 text-sm">
                             <label htmlFor="email" className="block text-black">Email</label>
@@ -122,8 +153,11 @@ const AuthForm = () => {
                                 autoFocus 
                                 id="email" 
                                 className="rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" 
-                                placeholder="Email" 
+                                placeholder="Email"
+                                onChange={emailChangeHandler}
+                                onBlur={emailBlurHandler} 
                                 ref={emailInputRef}/>
+                                {!isLogin && emailHasError && <small>Email must be in valid format.</small>}
                         </div>
                         <div className="my-5 text-sm">
                             <label htmlFor="password" className="block text-black">Password</label>
@@ -132,19 +166,29 @@ const AuthForm = () => {
                                 id="password" 
                                 className="rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" 
                                 placeholder="Password" 
-                                ref={passwordInputRef}/>
+                                ref={passwordInputRef}
+                                onChange={passwordChangeHandler}
+                                onBlur={passwordBlurHandler}
+                                />
+                                {!isLogin && passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>}
                             <div className="flex justify-end mt-2 text-xs text-gray-600">
                            
                             </div>
                         </div>
 
-    <button className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full">{isLogin ? 'Login' : 'Create Account'}</button>
-    <button 
-        type='button'
-        className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full"
-        onClick={switchAuthModeHandler}>
-        {isLogin ? 'Create new account' : 'Login with existing account'}
-    </button>
+                     {isLogin ? 
+                        <button 
+                            className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full" >
+                            Login </button>
+                            :   
+                            <button 
+                              
+                                className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full"
+                                disabled={!formIsValid}
+                                 >
+                            Create  Account </button>    
+                    }   
+    
                     </form>
 
                     <div className="flex md:justify-between justify-center items-center mt-10">
@@ -162,8 +206,10 @@ const AuthForm = () => {
                         </div>
                     </div>
 
-                    <p className="mt-12 text-xs text-center font-light text-gray-400"> Already have an account? <a href="../auth/register.html" className="text-black font-medium"> Sign In </a>  </p> 
-
+                    {isLogin ? 
+                    <p className="mt-12 text-xs text-center font-light text-gray-400"> New to Randi? <button onClick={switchAuthModeHandler} className="text-blue font-medium"> Sign Up </button>  </p> 
+                    :<p className="mt-12 text-xs text-center font-light text-gray-400"> Already have an account? <button onClick={switchAuthModeHandler} className="text-blue font-medium"> Sign In </button>  </p> 
+}
                 </div>
             </div>
         </section>

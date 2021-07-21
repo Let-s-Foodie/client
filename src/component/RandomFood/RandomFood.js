@@ -83,7 +83,9 @@ const RandomFood = ({ title,image,lat,lng,randomHandler,seller,category }) => {
     <span className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer mr-2"  
           onClick={() => hashtagHandler(title)}>#{title}</span>
     <span className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer mr-2"
-          onClick={() => hashtagHandler(seller.name)}>#{seller.name}</span>
+      > 
+         {/* onClick={() => hashtagHandler(seller.name)}>#{seller.name} */}
+          </span>
     <span className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer"
           onClick={() => hashtagHandler(category)}>#{category}</span>
         </div>

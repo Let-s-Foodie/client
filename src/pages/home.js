@@ -4,8 +4,11 @@ import Navbar from '../component/Navbar';
 import HeroSection from '../component/HeroSection';
 import InfoSection from '../component/InfoSection';
 import { homeObjOne,homeObjTwo,homeObjThree } from '../component/InfoSection/Data';
+import {homeSidebar} from '../component/Sidebar/Data';
+import {homeBar} from '../component/Navbar/Data';
 import Services from '../component/Services';
 import useGeoLocation from "../component/hooks/useGeoLocation";
+import Footer from '../component/Footer';
 const Home = () => {
     const [local, setLocal] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +23,7 @@ const Home = () => {
 
     useEffect(()=>{
         if(loaded){
-            const URL = "http://localhost:5000/random/local";
+            const URL = "http://localhost:8080/random/local";
             fetch(URL, {
                 method: "POST",
                 body: JSON.stringify({"lat": lat, "lng": lng}),
@@ -30,11 +33,11 @@ const Home = () => {
                   },
             })
             .then((res) => {
-            
+                
                 return res.json();
             })
             .then(resData=>{
-                console.log(resData.data)
+                
                 setLocal(resData.data)
                 setLoadedLocal(true);
         })
@@ -43,13 +46,13 @@ const Home = () => {
     },[loaded,lat,lng])
     return (
         <>
-            <Sidebar isOpen ={isOpen} toggle={toggle}/>
-            <Navbar toggle={toggle}/>
+            <Sidebar isOpen ={isOpen} toggle={toggle} {...homeSidebar}/>
+            <Navbar toggle={toggle} {...homeBar}/>
             <HeroSection />
             <Services local={local} loaded={loadedLocal ? 1: 0}/> 
-            <InfoSection {...homeObjOne}/>
             <InfoSection {...homeObjTwo}/>
             <InfoSection {...homeObjThree}/>
+            <Footer />
             
         </>
     )

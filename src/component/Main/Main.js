@@ -11,7 +11,7 @@ const Main = () => {
 
   useEffect(() => {
    
-    const URL = "http://localhost:5000/dishes";
+    const URL = "http://localhost:8080/dishes";
     fetch(URL)
     .then((res)=>{return res.json()})
     .then((data)=> {
@@ -35,7 +35,7 @@ const Main = () => {
   const foodListHandler = () => {
     let foodArr = [];
     let i = foodInfo.length;
-    
+    console.log("FoodInfo length test",foodInfo.length)
     let j = Math.floor(Math.random() * (i));
     foodArr.push(foodInfo[j]);
     foodInfo.splice(j,1);
