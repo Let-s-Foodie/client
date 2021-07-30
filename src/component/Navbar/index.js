@@ -1,12 +1,17 @@
 import React,{useContext,useState,useEffect} from 'react';
 import {animateScroll as scroll} from 'react-scroll';
 import AuthContext from '../../store/auth-context';
+import Dropdown from '../Dropdown';
 import {FaBars} from 'react-icons/fa';
-import {Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks, NavBtn, NavBtnLink} from './NavbarElement';
+import {VscAccount} from 'react-icons/vsc';
+import { AiOutlineUser } from "react-icons/ai";
+import {Button, ButtonR} from '../ButtonElement';
+import {Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks, NavBtn, NavBtnLink, Text,AccountLink, MenuBtn} from './NavbarElement';
 const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,contentOne,contentTwo,contentThree}) => {
     const authCtx = useContext(AuthContext);
     const isLoggedIn = authCtx.isLoggedIn;
     const [scrollNav, setScrollNav] = useState(false);
+    const [active,setActive] = useState('');
     const changeNav = () => {
         if(window.scrollY >= 80){
             setScrollNav(true);
@@ -25,7 +30,16 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
     const toggleHome = () => {
         scroll.scrollToTop();
     }
-   
+   const toggleMenu = (e)=> {
+        e.preventDefault();
+        if(e.target.classList.contains('open')){
+            e.target.classList.remove('open');
+            e.target.classList.add('close');
+        } else {
+            e.target.classList.remove('close');
+            e.target.classList.add('open');
+        }
+   }
     return (
         <>
             <Nav scrollNav={scrollNav}>
@@ -67,11 +81,18 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
                             <NavBtnLink to ='/auth'>Sign In</NavBtnLink>
                         </NavBtn>
                     }
-
+                   
                     {isLoggedIn &&
-                        <NavBtn onClick={logoutHandler}>
-                            <NavBtnLink>Logout</NavBtnLink> 
+                        <NavBtn>
+                          
+                           {/* <Button>Welcome Abby<AiOutlineUser/></Button> */}
+                           <Dropdown logoutHandler={logoutHandler}/>
+                           {/* <AccountLink to='/'></AccountLink> */}
                         </NavBtn>
+                        // <MenuBtn  onClick={toggleMenu}>
+                        //      <span className="icon"></span>
+                        //      <Text className="text">MENU</Text>
+                        // </MenuBtn>
                     }
                     
                 </NavbarContainer>

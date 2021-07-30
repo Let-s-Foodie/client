@@ -36,22 +36,7 @@ const Mainbar = ({toggle}) => {
                     <MobileIcon  onClick={toggle}>
                         <FaBars/>
                     </MobileIcon>
-                    <NavMenu>
-                       
-                       
-                        <NavItem>
-                          
-                            <NavLinkB
-                                to="/seller"
-                                scrollnav={scrollNav ? 1 : 0}
-                                smooth={true} duration={500} spy={true}
-                                exact='true' offset={-80}>For Businesses</NavLinkB>
-                            
-                            
-                        </NavItem>
-                       
-                        
-                    </NavMenu>
+                   
                     {!isLoggedIn &&
                         <NavBtn>
                             <NavBtnLink to ='/auth'>Sign In</NavBtnLink>

@@ -18,7 +18,7 @@ const SellerHeroSection = () => {
                     People on Randi are looking to spend their money with the right local business. Make sure they choose you.
                 </HeroP2>
                 <HeroBtnWrapper>
-                    <ButtonR to='/seller/dishes'
+                    <ButtonR to='/seller/register'
                         onMouseEnter={onHover}
                         onMouseLeave={onHover}
                         primary='true'
