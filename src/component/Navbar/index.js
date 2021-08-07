@@ -3,15 +3,12 @@ import {animateScroll as scroll} from 'react-scroll';
 import AuthContext from '../../store/auth-context';
 import Dropdown from '../Dropdown';
 import {FaBars} from 'react-icons/fa';
-import {VscAccount} from 'react-icons/vsc';
-import { AiOutlineUser } from "react-icons/ai";
-import {Button, ButtonR} from '../ButtonElement';
 import {Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks, NavBtn, NavBtnLink, Text,AccountLink, MenuBtn} from './NavbarElement';
 const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,contentOne,contentTwo,contentThree}) => {
     const authCtx = useContext(AuthContext);
     const isLoggedIn = authCtx.isLoggedIn;
     const [scrollNav, setScrollNav] = useState(false);
-    const [active,setActive] = useState('');
+  
     const changeNav = () => {
         if(window.scrollY >= 80){
             setScrollNav(true);
@@ -40,6 +37,7 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
             e.target.classList.add('open');
         }
    }
+   const userName = authCtx.token;
     return (
         <>
             <Nav scrollNav={scrollNav}>
@@ -84,15 +82,11 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
                    
                     {isLoggedIn &&
                         <NavBtn>
-                          
-                           {/* <Button>Welcome Abby<AiOutlineUser/></Button> */}
-                           <Dropdown logoutHandler={logoutHandler}/>
-                           {/* <AccountLink to='/'></AccountLink> */}
+     
+                           <Dropdown logoutHandler={logoutHandler} user={userName} />
+                         
                         </NavBtn>
-                        // <MenuBtn  onClick={toggleMenu}>
-                        //      <span className="icon"></span>
-                        //      <Text className="text">MENU</Text>
-                        // </MenuBtn>
+                      
                     }
                     
                 </NavbarContainer>

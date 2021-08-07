@@ -24,6 +24,7 @@ const App = () => {
           <Route path="/seller" component={SellerPage} exact/>
           <Route path="/seller/dishes" component={DishForm} exact/>
           <Route path="/seller/register" component={SellerResgisterPage} exact />
+          {/* <Route path="/seller/register/provide-sns" component={} exact /> */}
           <Route path ="*" component={Redirect} />
          
       </Switch>
