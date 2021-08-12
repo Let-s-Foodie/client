@@ -3,7 +3,7 @@ import Sidebar from '../component/Sidebar';
 import Navbar from '../component/Navbar';
 import HeroSection from '../component/HeroSection';
 import InfoSection from '../component/InfoSection';
-import { homeObjOne,homeObjTwo,homeObjThree } from '../component/InfoSection/Data';
+import { homeObjTwo,homeObjThree } from '../component/InfoSection/Data';
 import {homeSidebar} from '../component/Sidebar/Data';
 import {homeBar} from '../component/Navbar/Data';
 import Services from '../component/Services';
@@ -33,14 +33,17 @@ const Home = () => {
                   },
             })
             .then((res) => {
-                
-                return res.json();
+               
+                return res.json();  
             })
             .then(resData=>{
                 
                 setLocal(resData.data)
                 setLoadedLocal(true);
         })
+        }
+        return function cleanup(){
+            
         }
        
     },[loaded,lat,lng])

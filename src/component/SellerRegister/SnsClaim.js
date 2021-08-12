@@ -2,7 +2,7 @@ import React,{useRef,useEffect,useState, useContext} from 'react'
 import AuthContext from '../../store/auth-context';
 import Geocode from 'react-geocode';
 
-function SnsClaim({values,nextStep,prevStep,handleChange}) {
+function SnsClaim({values,nextStep,prevStep,handleChange,step}) {
     
     const authCtx = useContext(AuthContext);
 
@@ -10,9 +10,16 @@ function SnsClaim({values,nextStep,prevStep,handleChange}) {
     const facebookRef = useRef();
     const yelpRef = useRef();
     const [location, setLocation] = useState({'lat':'', 'lng': ''});
-    useEffect(()=>{
-        console.log("location" + location.lat + " " + location.lng)
-    },[location])
+    const beforeUnloadListener = (event) => {
+        event.preventDefault();
+        return event.returnValue = "Are you sure you want to exit?";
+    }
+    if(window.performance){
+        if(performance.navigation.type === 1 && values.business !== ''){
+          
+            window.addEventListener("beforeunload", beforeUnloadListener, {capture: true});
+        }
+    }
     let previous = e => {
         e.preventDefault();
         prevStep();
@@ -20,11 +27,11 @@ function SnsClaim({values,nextStep,prevStep,handleChange}) {
     
     const submitHandler = () => {
 
-        //const enteredAddress = streetRef.current.value + " " + cityRef.current.value + " " + stateRef.current.value + " " + zipcodeRef.current.value;
-        const apiKey = Geocode.setApiKey("AIzaSyBqZSD6xDbIPWdZ6sssQXOmv5m75FCa3Ek");
-        const enteredInsta = instagramRef.current.value == '' ? null : instagramRef.current.value
-        const enteredFb = facebookRef.current.value == '' ? null : facebookRef.current.value;
-        const enteredYelp = yelpRef.current.value == '' ? null : yelpRef.current.value;
+        
+        const apiKey = Geocode.setApiKey(process.env.GEO_API_KEY);
+        const enteredInsta = instagramRef.current.value === '' ? null : instagramRef.current.value
+        const enteredFb = facebookRef.current.value === '' ? null : facebookRef.current.value;
+        const enteredYelp = yelpRef.current.value === '' ? null : yelpRef.current.value;
         const businessName = values.business;
         const enteredAddress = values.street + " " + values.city + " " + values.state + " " + values.zipcode;
         const sellerData = {};
@@ -66,10 +73,7 @@ function SnsClaim({values,nextStep,prevStep,handleChange}) {
        
 
     }
-    const testHandler = () => {
-        setLocation({'lat': 'abc', 'lng': 'dfg'})
-       
-    }
+   
     return (
         <>
              <div className="mt-10 sm:mt-0">

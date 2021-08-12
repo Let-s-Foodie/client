@@ -7,7 +7,7 @@ const Main = () => {
 
   const [foodFeed, setFoodfeed] = useState([]);
   const [foodInfo, setFoodinfo] = useState([]);
-
+  const [lengthCheck, setLength] = useState([]);
 
   useEffect(() => {
    
@@ -18,13 +18,14 @@ const Main = () => {
 
     
     setFoodinfo(data);
-   console.log(data)
+    if(foodInfo.length <= 1) setLength("loading")
     })
     return () => {
       setFoodinfo({});
+      setLength();
     }
-   
-  },[foodInfo.length <=1])
+  
+  },[lengthCheck,foodInfo.length])
 
   const {
     loaded,
@@ -40,7 +41,6 @@ const Main = () => {
     foodArr.push(foodInfo[j]);
     foodInfo.splice(j,1);
     setFoodinfo(foodInfo);
-    console.log("seller",)
     const foods = {
       title: foodArr[0].name,
       image: foodArr[0].image,

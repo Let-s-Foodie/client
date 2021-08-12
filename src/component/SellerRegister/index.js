@@ -1,19 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
     BrowserRouter as Router,
-    Switch,
     Route,
-    Link,
-    useRouteMatch,
-    useParams
+    Redirect
   } from "react-router-dom";
 import img from '../../static/svg-1.svg';
 import BusinessClaim from './BusinessClaim';
 import SnsClaim from './SnsClaim';
 import {Container, Wrapper, Row, Column1, Column2, ImgWrap,Img} from './RegisterElement';
 const SellerRegister = ({lightBg, imgStart}) => {
-    //useEffect localstorage 
-
+    
+   
+    
+   
     const [registerSteps, setSteps] = useState({'step':1, // it should be updated 
     'business':'',
     'country':'',
@@ -27,26 +26,46 @@ const SellerRegister = ({lightBg, imgStart}) => {
     'homepage':'',
     'youtube':''
     });
-  
+   
     const {step} = registerSteps;
+
     const {business, country,street,city,state,instagram,zipcode, facebook, yelp, homepage, youtube} = registerSteps;
     const values = { business, country,street,city,state,instagram,zipcode, facebook, yelp, homepage, youtube};
-    
-    let match = useRouteMatch();
+    const [redirectTo, setRedirect] = useState(false);
+
     const nextStep = () => {
         const {step} = registerSteps;
         setSteps(previousInputs => ({...previousInputs,
             step: step + 1
         }))
+       
+        
+        
     }
+  
     const prevStep = () => {
         const { step } = registerSteps;
         setSteps(previousInputs => ({...previousInputs,
             step: step - 1
         })
         )
+     
     }
    
+    // useEffect(()=>{
+      
+      
+    //     setRedirect(true);
+        
+      
+    // },[step,nextStep,prevStep])
+    // if(redirectTo) {
+        
+    //     setRedirect(false);
+    //     return   <Redirect to={`/seller/register/${step}`} />;
+    // }
+    
+ 
     const handleChange = (input,value) => {
         
         setSteps(previousInputs => ({...previousInputs, [input]: value }));
@@ -56,28 +75,40 @@ const SellerRegister = ({lightBg, imgStart}) => {
         switch (step) {
             case 1:
                 return (
-                            <BusinessClaim
+                    <Route path={`/seller/register/${step}`} exact>
+                        <BusinessClaim
                             nextStep={nextStep}
                             values={values}
                             handleChange={handleChange}
-                            />
+                        />
+                    </Route>
+                          
                 )
                 
             case 2: 
-                return (<SnsClaim
+    
+          
+                return (
+                    <Route path="/seller/register/2" exact>
+                         <SnsClaim
                             nextStep={nextStep}
                             prevStep={prevStep}
                             values={values}
-                            handleChange={handleChange}/>) 
+                            handleChange={handleChange}/>
+                
+                    </Route>
+                   
+                  
+                    ) 
             default:
                 break;
         }    
     }
-    console.log(registerSteps)
+
+ 
     return (
       
         <>
-       
             <Container lightBg={lightBg}>
                 <Wrapper>
                     <Row imgStart={imgStart}>
@@ -88,6 +119,7 @@ const SellerRegister = ({lightBg, imgStart}) => {
                         </Column1>
                         <Column2>
                             <RegisterForm/>
+                           
                         </Column2>
                        
 

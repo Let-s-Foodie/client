@@ -1,9 +1,8 @@
 import React,{useState,useEffect,useContext} from 'react';
 import {animateScroll as scroll} from 'react-scroll';
 import AuthContext from '../../store/auth-context';
-import {Link, NavLink} from 'react-router-dom';
 import {FaBars} from 'react-icons/fa';
-import {Nav,NavLinkB, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks, NavBtn, NavBtnLink} from './MainbarElement';
+import {Nav,NavbarContainer, NavLogo, MobileIcon,NavBtn, NavBtnLink} from './MainbarElement';
 const Mainbar = ({toggle}) => {
     const authCtx = useContext(AuthContext);
     const isLoggedIn = authCtx.isLoggedIn;
@@ -17,7 +16,11 @@ const Mainbar = ({toggle}) => {
     }
 
     useEffect(() => {
-        window.addEventListener('scroll',changeNav)
+        window.addEventListener("scroll",changeNav)
+        //component will unmount
+        return () => {
+            window.removeEventListener("scroll",changeNav)
+        }
       }, [])
     const logoutHandler = () => {
         authCtx.logout();
@@ -30,7 +33,7 @@ const Mainbar = ({toggle}) => {
         <>
             <Nav scrollNav={scrollNav}>
                 <NavbarContainer>
-                    <NavLogo to ='/'  onClick={toggleHome} scrollnav={scrollNav ? 1 : 0}>
+                    <NavLogo to ='/seller'  onClick={toggleHome} scrollnav={scrollNav ? 1 : 0}>
                         Randi
                     </NavLogo>
                     <MobileIcon  onClick={toggle}>
@@ -45,7 +48,7 @@ const Mainbar = ({toggle}) => {
 
                     {isLoggedIn &&
                         <NavBtn onClick={logoutHandler}>
-                            <NavBtnLink>Logout</NavBtnLink> 
+                            <NavBtnLink to='/seller'>Logout</NavBtnLink> 
                         </NavBtn>
                     }
                     

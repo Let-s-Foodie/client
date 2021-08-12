@@ -7,18 +7,17 @@ const emailPattern =  new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]
 const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/);
 const isEmail = (value) => emailPattern.test(value);
 const isPassword = (value) => passwordPattern.test(value);
-const AuthForm = () => {
+const AuthForm = ({redirectLink,logoLink}) => {
     const [isLogin, setIsLogin ] = useState(true);
-    const [isvalidEmail, setValidEmail] = useState(false);
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
     const authCtx = useContext(AuthContext);
     const history = useHistory();
-
-
+    
+  
 
     const {
-        value: emailValue,
+       
         isValid: emailIsValid,
         hasError: emailHasError,
         valueChangeHandler: emailChangeHandler,
@@ -27,7 +26,7 @@ const AuthForm = () => {
     } = useInput(isEmail);
 
     const {
-        value: passwordValue,
+        
         isValid: passwordIsValid,
         hasError: passwordHasError,
         valueChangeHandler: passwordChangeHandler,
@@ -77,9 +76,7 @@ const AuthForm = () => {
                 }).then((data)=> {
                     const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
                     authCtx.login(data.idToken, expirationTime.toISOString());
-                  
-                   
-                    history.replace('/')// redirect user to main page
+                    history.replace(`${redirectLink}`)// redirect user to main page
                 })
                 .catch((err)=> {
                     alert(err.message);

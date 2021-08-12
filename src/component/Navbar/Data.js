@@ -1,5 +1,6 @@
 export const homeBar = {
     logoLink : "/",
+    signoutLink: "/",
     logoContent:"Randi",
     linktoOne:"service",
     linktoTwo:"about",
@@ -12,14 +13,14 @@ export const homeBar = {
  }
  export const sellerBar = {
     logoLink : "/seller",
+    signoutLink: "/seller",
     logoContent:"Randi for business",
     linktoOne:"service",
     linktoTwo:"about",
     linktoThree:"discover",
     contentOne:"Product",
     contentTwo:"About",
-    contentThree:"Support"
- 
- 
+    contentThree:"Support",
+   
  }
  

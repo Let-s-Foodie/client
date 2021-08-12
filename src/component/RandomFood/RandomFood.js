@@ -60,7 +60,7 @@ const RandomFood = ({ title,image,lat,lng,randomHandler,seller,category }) => {
     
 
 <div className="max-w-md rounded overflow-hidden shadow-lg my-3">
-        <img className="w-full" src={image}/>
+        <img alt="food image" className="w-full" src={image}/>
         <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2">{title}</div>
        

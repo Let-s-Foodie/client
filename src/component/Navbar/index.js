@@ -3,8 +3,8 @@ import {animateScroll as scroll} from 'react-scroll';
 import AuthContext from '../../store/auth-context';
 import Dropdown from '../Dropdown';
 import {FaBars} from 'react-icons/fa';
-import {Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks, NavBtn, NavBtnLink, Text,AccountLink, MenuBtn} from './NavbarElement';
-const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,contentOne,contentTwo,contentThree}) => {
+import {Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks, NavBtn, NavBtnLink} from './NavbarElement';
+const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,contentOne,contentTwo,contentThree, signoutLink}) => {
     const authCtx = useContext(AuthContext);
     const isLoggedIn = authCtx.isLoggedIn;
     const [scrollNav, setScrollNav] = useState(false);
@@ -18,7 +18,11 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
     }
 
     useEffect(() => {
-        window.addEventListener('scroll',changeNav)
+        window.addEventListener("scroll",changeNav)
+        //component will unmount
+        return() => {
+            window.removeEventListener("scroll",changeNav)
+        }
       }, [])
     const logoutHandler = () => {
         authCtx.logout();
@@ -27,16 +31,7 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
     const toggleHome = () => {
         scroll.scrollToTop();
     }
-   const toggleMenu = (e)=> {
-        e.preventDefault();
-        if(e.target.classList.contains('open')){
-            e.target.classList.remove('open');
-            e.target.classList.add('close');
-        } else {
-            e.target.classList.remove('close');
-            e.target.classList.add('open');
-        }
-   }
+ 
    const userName = authCtx.token;
     return (
         <>
@@ -76,14 +71,14 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
                     </NavMenu>
                     {!isLoggedIn &&
                         <NavBtn>
-                            <NavBtnLink to ='/auth'>Sign In</NavBtnLink>
+                            <NavBtnLink to = {logoLink => ({ ...logoLink, pathname: "/auth" })}>Sign In</NavBtnLink>
                         </NavBtn>
                     }
                    
                     {isLoggedIn &&
                         <NavBtn>
      
-                           <Dropdown logoutHandler={logoutHandler} user={userName} />
+                           <Dropdown logoutHandler={logoutHandler} user={userName} logoutLink={signoutLink}/>
                          
                         </NavBtn>
                       

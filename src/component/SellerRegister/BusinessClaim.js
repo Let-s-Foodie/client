@@ -1,22 +1,76 @@
-import React,{useRef} from 'react';
-import {Link, useParams,useRouteMatch} from "react-router-dom";
-import Geocode from 'react-geocode';
-
-
+import React,{useRef } from 'react';
+import useInput from "../hooks/use-input";
+const emptyPattern= new RegExp(/^$|\s+/);
+const isEmpty = (value) => !emptyPattern.test(value);
 const BusinessClaim = ({values,nextStep,handleChange}) => {
+    
    
-    const apiKey = Geocode.setApiKey("AIzaSyDSqPwVXMpohF0vOm95pZ6kadMTQ8fd6w8");
     const nameRef = useRef();
     const countryRef = useRef();
     const streetRef = useRef();
     const cityRef = useRef();
     const stateRef = useRef();
     const zipcodeRef = useRef();
+    let formIsValid = false;
+    const beforeUnloadListener = (event) => {
+        event.preventDefault();
+        return event.returnValue = "Are you sure you want to exit?";
+    }
+    if(window.performance){
+        if(performance.navigation.type === 1 && nameRef.current !== undefined){
+          
+            window.addEventListener("beforeunload", beforeUnloadListener, {capture: true});
+        }
+    }
+    const {
+        isValid: nameIsValid,
+        hasError: nameHasError,
+        valueChangeHandler: nameChangeHandler,
+        inputBlurHandler: nameBlurHandler,
+       
+    } = useInput(isEmpty);
+    const {
+      
+        valueChangeHandler: countryChangeHandler,
+        inputBlurHandler: countryBlurHandler,
+        
+    } = useInput(isEmpty);
+   
+    const {
+        
+        hasError: streetHasError,
+        valueChangeHandler: streetChangeHandler,
+        inputBlurHandler: streetBlurHandler
+    } = useInput(isEmpty);
+    const {
+        isValid: cityIsValid,
+        hasError: cityHasError,
+        valueChangeHandler: cityChangeHandler,
+        inputBlurHandler: cityBlurHandler,
+      
+    } = useInput(isEmpty);
+    const {
+        isValid: stateIsValid,
+        hasError: stateHasError,
+        valueChangeHandler: stateChangeHandler,
+        inputBlurHandler: stateBlurHandler,
+   
+    } = useInput(isEmpty);
+    const {
+        isValid: zipcodeIsValid,
+        hasError: zipcodeHasError,
+        valueChangeHandler: zipcodeChangeHandler,
+        inputBlurHandler: zipcodeBlurHandler,
+       
+    } = useInput(isEmpty);
+    if(nameIsValid && cityIsValid && stateIsValid && zipcodeIsValid){
+        formIsValid = true;
+    }
+  
 
-    let match = useRouteMatch();
     const submitHandler = () => {
 
-        //const enteredAddress = streetRef.current.value + " " + cityRef.current.value + " " + stateRef.current.value + " " + zipcodeRef.current.value;
+
         const enteredCountry = countryRef.current.value;
         const enteredStreet = streetRef.current.value;
         const enteredCity = cityRef.current.value;
@@ -63,10 +117,12 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             type="text"
                                             ref={nameRef}
                                             placeholder="name"
-                                         
+                                            onChange={nameChangeHandler}
+                                            onBlur={nameBlurHandler}
                                             defaultValue={values.business}
                                             className="focus:border-indigo-500 w-full border border-gray-300 text-black py-2 px-3 rounded-md"
                                         />
+                                        {nameHasError && <small className="text-gray-600">Please fill out this field</small>}
                                         </div>
 
                  
@@ -82,7 +138,8 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             name="country"
                                             placeholder="country"
                                             ref={countryRef}
-                                           
+                                            onChange={countryChangeHandler}
+                                            onBlur={countryBlurHandler}
                                             defaultValue={values.country}
                                             className="w-full py-2 px-3 border border-gray-300 bg-white text-black rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                         >
@@ -90,6 +147,7 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             <option>Canada</option>
                                             <option>Mexico</option>
                                         </select>
+                                   
                                         </div>
 
                                         <div className="col-span-6">
@@ -100,11 +158,14 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             type="text"
                                             name="street-address"
                                             id="street-address"
-                                            placeholder="street"
+                                            placeholder="123 Main St"
                                             ref={streetRef}
+                                            onChange={streetChangeHandler}
+                                            onBlur={streetBlurHandler}
                                             defaultValue={values.street}
                                             className="py-2 px-3 focus:ring-indigo-500 text-black focus:border-indigo-500  w-full shadow-sm border border-gray-300 rounded-md"
                                         />
+                                             {streetHasError && <small className="text-gray-600">Please fill out this field</small>}
                                         </div>
 
                                         <div className="col-span-6 sm:col-span-6 lg:col-span-2">
@@ -116,12 +177,16 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             name="city"
                                             id="city"
                                             ref={cityRef}
+                                            placeholder="city"
+                                            onBlur={cityBlurHandler}
+                                            onChange={cityChangeHandler}
                                             defaultValue={values.city}
                                             className="py-2 px-3 focus:ring-indigo-500 text-black focus:border-indigo-500  w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
                                         />
+                                          {cityHasError && <small className="text-gray-600 block">Please fill out this field</small>}
                                         </div>
-
-                                        <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                                      
+                                        <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                                         <label htmlFor="state" className="block text-sm font-medium text-gray-700">
                                             State 
                                         </label>
@@ -129,12 +194,16 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             type="text"
                                             name="state"
                                             id="state"
+                                            placeholder="state"
                                             ref={stateRef}
+                                            onBlur={stateBlurHandler}
+                                            onChange={stateChangeHandler}
                                             defaultValue={values.state}
                                             className="mt-1 py-2 px-3 focus:ring-indigo-500 text-black focus:border-indigo-500  w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
                                         />
+                                         {stateHasError && <small className="text-gray-600">Please fill out this field</small>}
                                         </div>
-
+                                       
                                         <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                                         <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700">
                                             ZIP / Postal
@@ -144,9 +213,13 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             name="postal-code"
                                             id="postal-code"
                                            ref={zipcodeRef}
+                                           onChange={zipcodeChangeHandler}
+                                           onBlur={zipcodeBlurHandler}
+                                           placeholder="Zipcode"
                                            defaultValue={values.zipcode}
                                             className="mt-1 py-2 px-3 focus:ring-indigo-500 text-black focus:border-indigo-500  w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
                                         />
+                                             {zipcodeHasError && <small className="text-gray-600">Please fill out this field</small>}
                                         </div>
                                     </div>
                                     </div>
@@ -155,8 +228,10 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                     <button
                                             type="submit"
                                             onClick={submitHandler}
-                                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50" 
+                                           disabled = {!formIsValid}
                                         >
+                                           
                                             Next
                                         </button>
                                   

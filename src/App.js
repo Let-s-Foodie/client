@@ -19,13 +19,14 @@ const App = () => {
 
       <Switch>
           <Route path="/" component={Home} exact />
-          {!authCtx.isLoggedIn && <Route path="/auth" component={AuthForm} />}
+          {!authCtx.isLoggedIn && <Route path="/auth" ><AuthForm redirectLink="/"/></Route>}
           <Route path="/mainpage" component={MainPage} exact />
           <Route path="/seller" component={SellerPage} exact/>
           <Route path="/seller/dishes" component={DishForm} exact/>
-          <Route path="/seller/register" component={SellerResgisterPage} exact />
-          {/* <Route path="/seller/register/provide-sns" component={} exact /> */}
-          <Route path ="*" component={Redirect} />
+          <Route path="/seller/register/:step" component={SellerResgisterPage} exact >
+            {!authCtx.isLoggedIn && <AuthForm redirectLink="/seller"/>}
+          </Route>
+          {/* <Route path ="*" component={Redirect} /> */}
          
       </Switch>
    

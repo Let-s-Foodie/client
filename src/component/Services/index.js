@@ -1,5 +1,4 @@
 import React from 'react'
-import Icon1 from '../../static/svg-1.svg';
 import Spinner from '../Spinner';
 import {ServicesContainer,ServicesH2,ServicesH1,ServicesCard,ServicesWrapper,ServicesIcon,ServicesP} from './ServicesElement';
 const Services = ({loaded,local}) => {

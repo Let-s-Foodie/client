@@ -1,8 +1,7 @@
 import React, { useRef } from 'react'
 import {Menucontainer,MenuTrigger,UserName,UserImg,MenuNav,Navul,Navli,NavA} from './DropdownElement';
-import AuthContext from '../../store/auth-context';
 import { useDetectOutsideClick } from "./useDetectOutsideClick";
-const Dropdown = ({logoutHandler, user}) => {
+const Dropdown = ({logoutHandler, user,logoutLink}) => {
     const dropdownRef = useRef(null);
     const [isActive, setIsActive] = useDetectOutsideClick(dropdownRef, false);
     const toggleActive = () => setIsActive(!isActive);
@@ -16,13 +15,13 @@ const Dropdown = ({logoutHandler, user}) => {
             <MenuNav className={`${isActive ? "active" : "inactive"}`}>
                 <Navul>
                     <Navli>
-                        <NavA>My Account</NavA>
+                        <NavA to="/account">My Account</NavA>
                     </Navli>
                     <Navli>
-                        <NavA to='/seller'>Start a Selling Account</NavA>
+                        <NavA to="/seller">Start a Selling Account</NavA>
                     </Navli>
                     <Navli>
-                        <NavA onClick={logoutHandler}>Sign Out</NavA>
+                        <NavA to ={logoutLink} onClick={logoutHandler}>Sign Out</NavA>
                     </Navli>
                 </Navul>
             </MenuNav>
