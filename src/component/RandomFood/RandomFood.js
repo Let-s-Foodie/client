@@ -60,7 +60,7 @@ const RandomFood = ({ title,image,lat,lng,randomHandler,seller,category }) => {
     
 
 <div className="max-w-md rounded overflow-hidden shadow-lg my-3">
-        <img className="w-full" src={image}/>
+        <img alt="food image" className="w-full" src={image}/>
         <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2">{title}</div>
        
@@ -83,7 +83,9 @@ const RandomFood = ({ title,image,lat,lng,randomHandler,seller,category }) => {
     <span className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer mr-2"  
           onClick={() => hashtagHandler(title)}>#{title}</span>
     <span className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer mr-2"
-          onClick={() => hashtagHandler(seller.name)}>#{seller.name}</span>
+      > 
+         {/* onClick={() => hashtagHandler(seller.name)}>#{seller.name} */}
+          </span>
     <span className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer"
           onClick={() => hashtagHandler(category)}>#{category}</span>
         </div>

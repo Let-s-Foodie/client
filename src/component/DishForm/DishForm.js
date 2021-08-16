@@ -1,14 +1,14 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useContext} from 'react'
+import AuthContext from '../../store/auth-context';
 import Hoc from '../hoc/hoc';
 const DishForm = () => {
+    const authCtx = useContext(AuthContext);
     const nameInputRef = useRef();
     const categoryRef = useRef();
     const [fileInputState,setFileInputState] = useState('');
     const [selectedFile, setSelectedFile] = useState('');
     const [previewSource, setPreviewSource] = useState('');
     const [imageUrl, setImageurl] = useState('');
-    const errs = [];
-    const fileRef = useRef(null);
     const handlerFileInputChange = (e) => {
         const file = e.target.files[0];
         console.log(file)
@@ -21,6 +21,27 @@ const DishForm = () => {
         reader.readAsDataURL(file);
         reader.onloadend = () => {
             setPreviewSource(reader.result);
+        }
+    }
+    const uploadImage = async (base64EncodedImage) => { 
+       
+        let URL = 'http://localhost:8080/image/uploadimages';
+        try {
+            let res = await fetch(URL,{
+             method: 'POST',
+             body: JSON.stringify({data: base64EncodedImage}),
+             headers: {'Content-Type': 'application/json',
+                        'authtoken': authCtx.token
+                        },
+            })
+           let imageUrl = await res.json();
+          
+            setImageurl(imageUrl);
+            setFileInputState('');
+            setPreviewSource('');
+        } catch(err){
+            console.log(err);
+ 
         }
     }
     const handlerFileInput = () => {
@@ -41,30 +62,13 @@ const DishForm = () => {
      
  
     }
-    const uploadImage = async (base64EncodedImage) => { 
-        let URL = 'http://localhost:5000/image/uploadimages';
-        try {
-            let res = await fetch(URL,{
-             method: 'POST',
-             body: JSON.stringify({data: base64EncodedImage}),
-             headers: {'Content-Type': 'application/json'},
-            })
-           let imageUrl = await res.json();
-           console.log(imageUrl)
-            setImageurl(imageUrl);
-            setFileInputState('');
-            setPreviewSource('');
-        } catch(err){
-            console.log(err);
- 
-        }
-    }
+  
      const submitHandler = (event) => {
          event.preventDefault();
          const enteredName = nameInputRef.current.value;
         
          const sellerId = 5;
-         //const image = "https://res.cloudinary.com/joonyc/image/upload/v1622220385/burger_1_negokc.jpg";
+         
         
         
          const enteredCategory = categoryRef.current.value;
@@ -73,7 +77,7 @@ const DishForm = () => {
         
          dishData.category = enteredCategory;
          dishData.sellerId = sellerId;
-         const URL = "http://localhost:5000/dishes";
+         const URL = "http://localhost:8080/dishes";
          handlerFileInput();
          let image_ = imageUrl.image_url;
          dishData.image = image_;
@@ -83,7 +87,8 @@ const DishForm = () => {
              body: JSON.stringify(dishData),
              headers: {
                  'Accept': 'application/json, text/plain, */*',
-                 'Content-Type': 'application/json'
+                 'Content-Type': 'application/json',
+                 "authtoken": authCtx.token
                },
          })
          .then((res) => {

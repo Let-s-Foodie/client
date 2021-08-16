@@ -84,7 +84,19 @@ export const HeroP = styled.p`
         font-size: 18px;
     }
 `;
-
+export const HeroP2 = styled.p`
+    margin-top: 15px;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    max-width: 600px;
+    @media screen and (max-width: 768px){
+        font-size: 24px;
+    }
+    @media screen and (max-width: 480){
+        font-size: 18px;
+    }
+`;
 export const HeroBtnWrapper = styled.div`
     margin-top: 32px;
     display: flex;

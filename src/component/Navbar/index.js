@@ -1,12 +1,14 @@
 import React,{useContext,useState,useEffect} from 'react';
 import {animateScroll as scroll} from 'react-scroll';
 import AuthContext from '../../store/auth-context';
+import Dropdown from '../Dropdown';
 import {FaBars} from 'react-icons/fa';
 import {Nav, NavbarContainer, NavLogo, MobileIcon, NavMenu, NavItem, NavLinks, NavBtn, NavBtnLink} from './NavbarElement';
-const Navbar = ({toggle}) => {
+const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,contentOne,contentTwo,contentThree, signoutLink}) => {
     const authCtx = useContext(AuthContext);
     const isLoggedIn = authCtx.isLoggedIn;
     const [scrollNav, setScrollNav] = useState(false);
+  
     const changeNav = () => {
         if(window.scrollY >= 80){
             setScrollNav(true);
@@ -16,7 +18,11 @@ const Navbar = ({toggle}) => {
     }
 
     useEffect(() => {
-        window.addEventListener('scroll',changeNav)
+        window.addEventListener("scroll",changeNav)
+        //component will unmount
+        return() => {
+            window.removeEventListener("scroll",changeNav)
+        }
       }, [])
     const logoutHandler = () => {
         authCtx.logout();
@@ -25,12 +31,14 @@ const Navbar = ({toggle}) => {
     const toggleHome = () => {
         scroll.scrollToTop();
     }
+ 
+   const userName = authCtx.token;
     return (
         <>
             <Nav scrollNav={scrollNav}>
                 <NavbarContainer>
-                    <NavLogo to ='/'  onClick={toggleHome} scrollnav={scrollNav ? 1 : 0}>
-                        Randi
+                    <NavLogo to ={logoLink}  onClick={toggleHome} scrollnav={scrollNav ? 1 : 0}>
+                       {logoContent}
                     </NavLogo>
                     <MobileIcon  onClick={toggle}>
                         <FaBars/>
@@ -38,39 +46,42 @@ const Navbar = ({toggle}) => {
                     <NavMenu>
                         <NavItem>
                             <NavLinks 
-                                to ='services' 
-                                scrollnav={scrollNav ? 1 : 0}
-                                smooth={true} duration={500} spy={true}
-                                exact='true' offset={-80}
-                                >Services</NavLinks>
+                                    to ={linktoOne}
+                                    scrollnav={scrollNav ? 1 : 0}
+                                    smooth={true} duration={500} spy={true}
+                                    exact='true' offset={-80} >{contentOne}</NavLinks>
                         </NavItem>
                         <NavItem>
                             <NavLinks 
-                                to ='about' 
+                                to ={linktoTwo}
                                 scrollnav={scrollNav ? 1 : 0}
                                 smooth={true} duration={500} spy={true}
-                                exact='true' offset={-80} >About</NavLinks>
+                                exact='true' offset={-80} >{contentTwo}</NavLinks>
                         </NavItem>
                         <NavItem>
                             <NavLinks 
-                                to ='discover' 
+                                to = {linktoThree}
                                 scrollnav={scrollNav ? 1 : 0}
                                 smooth={true} duration={500} spy={true}
-                                exact='true' offset={-80}>Discover</NavLinks>
+                                exact='true' offset={-80}>{contentThree}</NavLinks>
                         </NavItem>
+                      
                        
                         
                     </NavMenu>
                     {!isLoggedIn &&
                         <NavBtn>
-                            <NavBtnLink to ='/auth'>Sign In</NavBtnLink>
+                            <NavBtnLink to = {logoLink => ({ ...logoLink, pathname: "/auth" })}>Sign In</NavBtnLink>
                         </NavBtn>
                     }
-
+                   
                     {isLoggedIn &&
-                        <NavBtn onClick={logoutHandler}>
-                            <NavBtnLink>Logout</NavBtnLink> 
+                        <NavBtn>
+     
+                           <Dropdown logoutHandler={logoutHandler} user={userName} logoutLink={signoutLink}/>
+                         
                         </NavBtn>
+                      
                     }
                     
                 </NavbarContainer>
