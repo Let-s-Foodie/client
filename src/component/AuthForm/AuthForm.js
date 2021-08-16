@@ -48,8 +48,9 @@ const AuthForm = ({redirectLink,logoLink}) => {
        
         let url;
         if(isLogin) {
-            
+            console.log(process.env.REACT_APP_API_KEY)
             url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY}`;
+           
             fetch(url,
                 {
                     method: 'POST',
@@ -69,6 +70,7 @@ const AuthForm = ({redirectLink,logoLink}) => {
                     } else {
                         return res.json().then((data)=> {
                            //show error modal
+                           console.log(data)
                            let errorMessage = 'Authentication Failed';
                           throw new Error(errorMessage);
                         })

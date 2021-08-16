@@ -5,7 +5,6 @@ import Geocode from 'react-geocode';
 function SnsClaim({values,nextStep,prevStep,handleChange,step}) {
     
     const authCtx = useContext(AuthContext);
-
     const instagramRef = useRef();
     const facebookRef = useRef();
     const yelpRef = useRef();
@@ -27,8 +26,8 @@ function SnsClaim({values,nextStep,prevStep,handleChange,step}) {
     
     const submitHandler = () => {
 
-        
-        const apiKey = Geocode.setApiKey(process.env.GEO_API_KEY);
+      
+        const apiKey = Geocode.setApiKey(process.env.REACT_APP_GEO_API_KEY);
         const enteredInsta = instagramRef.current.value === '' ? null : instagramRef.current.value
         const enteredFb = facebookRef.current.value === '' ? null : facebookRef.current.value;
         const enteredYelp = yelpRef.current.value === '' ? null : yelpRef.current.value;

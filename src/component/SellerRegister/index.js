@@ -39,7 +39,7 @@ const SellerRegister = ({lightBg, imgStart}) => {
             step: step + 1
         }))
        
-        
+       
         
     }
   
@@ -69,6 +69,7 @@ const SellerRegister = ({lightBg, imgStart}) => {
     const handleChange = (input,value) => {
         
         setSteps(previousInputs => ({...previousInputs, [input]: value }));
+       
       };
     const RegisterForm = () => {
        
@@ -89,7 +90,7 @@ const SellerRegister = ({lightBg, imgStart}) => {
     
           
                 return (
-                    <Route path="/seller/register/2" exact>
+                    <Route path="/seller/register/1" exact>
                          <SnsClaim
                             nextStep={nextStep}
                             prevStep={prevStep}
