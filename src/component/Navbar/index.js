@@ -16,7 +16,7 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
             setScrollNav(false);
         }
     }
-
+   
     useEffect(() => {
         window.addEventListener("scroll",changeNav)
         //component will unmount
@@ -71,7 +71,8 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
                     </NavMenu>
                     {!isLoggedIn &&
                         <NavBtn>
-                            <NavBtnLink to = {logoLink => ({ ...logoLink, pathname: "/auth" })}>Sign In</NavBtnLink>
+                            <NavBtnLink to = {signoutLink === 
+                                '/' ? `${signoutLink}auth`:`${signoutLink}/auth`}>Sign In</NavBtnLink>
                         </NavBtn>
                     }
                    

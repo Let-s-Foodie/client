@@ -2,14 +2,14 @@ import {React,useContext} from "react";
 
 
 import MainPage from "./pages/MainPage";
-import {BrowserRouter as Router,Route,Switch, Redirect} from 'react-router-dom';
+import {BrowserRouter as Router,Route,Switch, useParams} from 'react-router-dom';
 import AuthForm from '../src/component/AuthForm/AuthForm';
 import SellerPage from './pages/SellerPage';
 import SellerResgisterPage from './pages/SellerRegisterPage';
 import DishForm from '../src/component/DishForm/DishForm';
 import AuthContext from './store/auth-context';
 import Home from "./pages/home";
-
+import SellerAuth from '../src/component/AuthForm/SellerAuth';
 const App = () => {
 
   const authCtx = useContext(AuthContext);
@@ -23,9 +23,9 @@ const App = () => {
           <Route path="/mainpage" component={MainPage} exact />
           <Route path="/seller" component={SellerPage} exact/>
           <Route path="/seller/dishes" component={DishForm} exact/>
-          <Route path="/seller/register/:step" component={SellerResgisterPage} exact >
-            {!authCtx.isLoggedIn && <AuthForm redirectLink="/seller"/>}
-          </Route>
+          <Route path="/seller/register/:step" component={SellerResgisterPage} exact />
+          
+          {!authCtx.isLoggedIn  && <Route path="/seller/auth"><SellerAuth redirectLink="/seller" exact /></Route>}
           {/* <Route path ="*" component={Redirect} /> */}
          
       </Switch>

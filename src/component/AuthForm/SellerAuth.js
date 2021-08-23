@@ -7,7 +7,7 @@ const emailPattern =  new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]
 const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/);
 const isEmail = (value) => emailPattern.test(value);
 const isPassword = (value) => passwordPattern.test(value);
-const AuthForm = ({redirectLink,logoLink}) => {
+const SellerAuth = ({redirectLink,logoLink}) => {
     const [isLogin, setIsLogin ] = useState(true);
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
@@ -48,6 +48,8 @@ const AuthForm = ({redirectLink,logoLink}) => {
        
         let url;
         if(isLogin) {
+            //Check user's role 
+           
             
             url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY}`;
            
@@ -66,16 +68,44 @@ const AuthForm = ({redirectLink,logoLink}) => {
                 }
                 ).then((res) => {
                     if(res.ok){
+                        
                         return res.json()
                     } else {
                         return res.json().then((data)=> {
                            //show error modal
-                         
+                           console.log(data)
                            let errorMessage = 'Authentication Failed';
                           throw new Error(errorMessage);
                         })
                     }
-                }).then((data)=> {
+                })
+                .then((data)=>{
+                    return fetch("http://localhost:8080/users/signin",{
+                        body: JSON.stringify({data: data}), 
+                        method: "POST",
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json',
+                            "authtoken": data.idToken
+                          },
+                    })
+                   
+                })
+                .then((res) => {
+                    if(res.ok) return res.json()
+                    else {
+                        return res.json().then((data) => {
+                            let errorMessage = 'Admin Failed'
+                            console.log(data)
+                            throw new Error(errorMessage)
+                        })
+                    }
+    
+                })
+               
+               
+                .then((data)=> {
+                    console.log("role check", data)
                     const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
                     authCtx.login(data.idToken, expirationTime.toISOString());
                     history.replace(`${redirectLink}`)// redirect user to main page
@@ -86,9 +116,9 @@ const AuthForm = ({redirectLink,logoLink}) => {
                 resetEmail();
                 resetPassword();
         } else {
-            // if(!formIsValid){
-            //     return;
-            // }
+            if(!formIsValid){
+                return;
+            }
             url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY}`;
             fetch(url,
                 {
@@ -118,7 +148,7 @@ const AuthForm = ({redirectLink,logoLink}) => {
                         method: "POST",
                         body: JSON.stringify({
                             email: data.email,
-                            role: "user"
+                            role: "seller"
                         }),
                         headers: {
                             'Accept': 'application/json, text/plain, */*',
@@ -126,7 +156,7 @@ const AuthForm = ({redirectLink,logoLink}) => {
                           }
                     }).then((res) => console.log(res))
                     console.log(data)
-                   history.replace('/')
+                   history.replace('/seller')
                 })
                 .catch((err)=> {
                     alert(err.message);
@@ -156,7 +186,7 @@ const AuthForm = ({redirectLink,logoLink}) => {
                                 onChange={emailChangeHandler}
                                 onBlur={emailBlurHandler} 
                                 ref={emailInputRef}/>
-                                {/* {!isLogin && !emailHasError && <small>Email must be in valid format.</small>} */}
+                                {!isLogin && emailHasError && <small>Email must be in valid format.</small>}
                         </div>
                         <div className="my-5 text-sm">
                             <label htmlFor="password" className="block text-black">Password</label>
@@ -169,7 +199,7 @@ const AuthForm = ({redirectLink,logoLink}) => {
                                 onChange={passwordChangeHandler}
                                 onBlur={passwordBlurHandler}
                                 />
-                                {/* {!isLogin && !passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>} */}
+                                {!isLogin && passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>}
                             <div className="flex justify-end mt-2 text-xs text-gray-600">
                            
                             </div>
@@ -183,7 +213,7 @@ const AuthForm = ({redirectLink,logoLink}) => {
                             <button 
                               
                                 className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full"
-                                // disabled={formIsValid}
+                                disabled={!formIsValid}
                                  >
                             Create  Account </button>    
                     }   
@@ -214,4 +244,4 @@ const AuthForm = ({redirectLink,logoLink}) => {
         </section>
     )
 }
-export default AuthForm;
+export default SellerAuth;
