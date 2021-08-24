@@ -2,18 +2,21 @@ import {useState, useRef, useContext } from 'react';
 import {useHistory} from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
 import useInput from '../hooks/use-input';
-
+import ErrorAuth from './Error/ErrorAuth';
 const emailPattern =  new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
 const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/);
 const isEmail = (value) => emailPattern.test(value);
 const isPassword = (value) => passwordPattern.test(value);
 const AuthForm = ({redirectLink,logoLink}) => {
     const [isLogin, setIsLogin ] = useState(true);
+    const [authError,setError] = useState(false);
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
     const authCtx = useContext(AuthContext);
     const history = useHistory();
-    
+    const cancleHandler = () => {
+        setError(false);
+    }
   
 
     const {
@@ -66,13 +69,13 @@ const AuthForm = ({redirectLink,logoLink}) => {
                 }
                 ).then((res) => {
                     if(res.ok){
+                        setError(false);
                         return res.json()
                     } else {
                         return res.json().then((data)=> {
                            //show error modal
-                         
-                           let errorMessage = 'Authentication Failed';
-                          throw new Error(errorMessage);
+                            setError(true);
+                          
                         })
                     }
                 }).then((data)=> {
@@ -143,6 +146,7 @@ const AuthForm = ({redirectLink,logoLink}) => {
           
             <div className="bg-white lg:w-4/12 md:6/12 w-10/12 m-auto my-10 shadow-md">
                 <div className="py-8 px-8 rounded-xl">
+                    {authError ? <ErrorAuth cancleHandler={cancleHandler}/> : <></>}
                     <h1 className="font-medium text-2xl mt-3 text-center">{isLogin ? 'Login' : 'Create an Account'}</h1>
                     <form onSubmit={submitHandler} className="mt-6">
                         <div className="my-5 text-sm">
