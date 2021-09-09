@@ -10,9 +10,11 @@ const emailPattern =  new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]
 const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/);
 const isEmail = (value) => emailPattern.test(value);
 const isPassword = (value) => passwordPattern.test(value);
-const SellerAuth = ({redirectLink,logoLink}) => {
+
+const SellerAuth = ({redirectLink}) => {
     const [isAdmin, setAdmin] = useState(true);
     const [isLogin, setIsLogin ] = useState(true);
+    const [errorMsg, setErrorMsg] = useState('');
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
     const authCtx = useContext(AuthContext);
@@ -79,13 +81,17 @@ const SellerAuth = ({redirectLink,logoLink}) => {
                     } else {
                         return res.json().then((data)=> {
                            //show error modal
+                           const errorMessage = "The email address or password you entered is incorrect."
+                           setErrorMsg(errorMessage)
                            setError(true);
-                           const error = new Error('Authentication Error')
-                           throw error;
+                           const error = data['error']['message'];
+                           console.log("error check",error)
+                           throw new Error(error);
                          
                         })
                     }
                 })
+
                 .then((data)=>{
                     return fetch("http://localhost:8080/users/signin",{
                         body: JSON.stringify({data: data}), 
@@ -121,7 +127,7 @@ const SellerAuth = ({redirectLink,logoLink}) => {
                     history.replace(`${redirectLink}`)// redirect user to main page
                 })
                 .catch((err)=> {
-                    console.log(err);
+                    console.error("error", err);
                 })
                 resetEmail();
                 resetPassword();
@@ -185,7 +191,7 @@ const SellerAuth = ({redirectLink,logoLink}) => {
             <div className="bg-white lg:w-4/12 md:6/12 w-10/12 m-auto my-10 shadow-md">
                 
                 <div className="py-8 px-8 rounded-xl">
-                    {authError ? <ErrorAuth cancleHandler={cancleHandler}/> : <></>}
+                    {authError ? <ErrorAuth msg={errorMsg} cancleHandler={cancleHandler}/> : <></>}
                    {isAdmin ? <></>: <ErrorSeller/>}
                    
                     <h1 className="font-medium text-2xl mt-3 text-center">{isLogin ? 'Login' : 'Create an Account'}</h1>
@@ -201,7 +207,7 @@ const SellerAuth = ({redirectLink,logoLink}) => {
                                 onChange={emailChangeHandler}
                                 onBlur={emailBlurHandler} 
                                 ref={emailInputRef}/>
-                                {!isLogin && emailHasError && <small>Email must be in valid format.</small>}
+                                {!isLogin && !emailHasError && <small>Email must be in valid format.</small>}
                         </div>
                         <div className="my-5 text-sm">
                             <label htmlFor="password" className="block text-black">Password</label>
@@ -214,7 +220,7 @@ const SellerAuth = ({redirectLink,logoLink}) => {
                                 onChange={passwordChangeHandler}
                                 onBlur={passwordBlurHandler}
                                 />
-                                {!isLogin && passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>}
+                                {!isLogin && !passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>}
                             <div className="flex justify-end mt-2 text-xs text-gray-600">
                            
                             </div>
@@ -228,7 +234,7 @@ const SellerAuth = ({redirectLink,logoLink}) => {
                             <button 
                               
                                 className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full"
-                                disabled={!formIsValid}
+                                disabled={formIsValid}
                                  >
                             Create  Account </button>    
                     }   

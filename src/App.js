@@ -2,8 +2,8 @@ import {React,useContext} from "react";
 
 
 import MainPage from "./pages/MainPage";
-import {BrowserRouter as Router,Route,Switch, useParams} from 'react-router-dom';
-import AuthForm from '../src/component/AuthForm/AuthForm';
+import {BrowserRouter as Router,Route,Switch, useParams, Redirect} from 'react-router-dom';
+import AuthForm from './component/AuthForm/AuthForm';
 import SellerPage from './pages/SellerPage';
 import SellerResgisterPage from './pages/SellerRegisterPage';
 import DishForm from '../src/component/DishForm/DishForm';
@@ -18,14 +18,16 @@ const App = () => {
     <Router>
 
       <Switch>
-          <Route path="/" component={Home} exact />
+          <Route path="/" component={Home} exact /> 
           {!authCtx.isLoggedIn && <Route path="/auth" ><AuthForm redirectLink="/"/></Route>}
           <Route path="/mainpage" component={MainPage} exact />
           <Route path="/seller" component={SellerPage} exact/>
           <Route path="/seller/dishes" component={DishForm} exact/>
-          <Route path="/seller/register/:step" component={SellerResgisterPage} exact />
-          
           {!authCtx.isLoggedIn  && <Route path="/seller/auth"><SellerAuth redirectLink="/seller" exact /></Route>}
+          {authCtx.isLoggedIn ? <Route path="/seller/register/:step" component={SellerResgisterPage} exact />
+            : <Redirect to= '/seller/auth'/>}
+          
+          
           {/* <Route path ="*" component={Redirect} /> */}
          
       </Switch>
