@@ -47,136 +47,130 @@ const SellerAuth = ({redirectLink}) => {
     }
     const switchAuthModeHandler = () => {
         setIsLogin((prevState) => !prevState);
+        setAdmin(true);
+        setError(false);
     };
+    class UserStorage {
+        async loginUser(id,password){
+            const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY}`;
+            const response = await fetch(url,{
+                method: 'POST',
+                body: JSON.stringify({
+                    email:id,
+                    password:password,
+                    returnSecureToken: true
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+
+            if(!response.ok){
+                const errorMessage = "The email address or password you entered is incorrect.";
+                setErrorMsg(errorMessage);
+                setError(true);
+                const error = new Error(errorMessage);
+                throw error;
+            }
+
+            const user = await response.json();
+            const url2 = "http://localhost:8080/users/signin";
+            const roleCheck = await fetch(url2, {
+                body: JSON.stringify({data: user}),
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json, text/plain, ',
+                    'Content-Type': 'application/json',
+                    "authtoken": user.idToken
+                }
+            })
+            if(!roleCheck.ok){
+                setAdmin(false);
+                const error = new Error("Admin error");
+                throw error;
+            }
+            setAdmin(true);
+            const userAdmin = await roleCheck.json();
+
+            return userAdmin;
+         
+        }
+        async signupFirebase(id,password){
+            const url =`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY}`;
+            const response = await fetch(url,{
+                method: 'POST',
+                body: JSON.stringify({
+                    email:id,
+                    password: password,
+                    returnSecureToken: true
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if(!response.ok){
+               
+                const errorMessage = await response.json().then(data => 
+                    data.error.errors[0].message
+                )
+                setErrorMsg(errorMessage)
+                setError(true)
+                throw new Error(errorMessage);
+            }
+            const user = await response.json();
+            return user;
+        }
+        async signupLocal(data){
+            const url = "http://localhost:8080/users/signup";
+            const response = await fetch(url,{
+                method: "POST",
+                body: JSON.stringify({
+                    email: data.email,
+                    role: "seller"
+                }),
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                  }
+            })
+
+            if(!response.ok) throw new Error("failed to update to local database");
+            return response;
+        }
+    }
     const submitHandler = (event) => {
         event.preventDefault();
         const enteredEmail = emailInputRef.current.value;
         const enteredPassword = passwordInputRef.current.value;
+        const userStorage = new UserStorage();
+
         //Add Validation
        
-        let url;
+        
         if(isLogin) {
             //Check user's role 
-           
+               
             
-            url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY}`;
-           
-            fetch(url,
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        email:enteredEmail,
-                        password: enteredPassword,
-                        returnSecureToken: true
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                      
-                    }
-                }
-                ).then((res) => {
-                    if(res.ok){
-                        setError(false);
-                        return res.json()   
-                    } else {
-                        return res.json().then((data)=> {
-                           //show error modal
-                           const errorMessage = "The email address or password you entered is incorrect."
-                           setErrorMsg(errorMessage)
-                           setError(true);
-                           const error = data['error']['message'];
-                           console.log("error check",error)
-                           throw new Error(error);
-                         
-                        })
-                    }
-                })
-
-                .then((data)=>{
-                    return fetch("http://localhost:8080/users/signin",{
-                        body: JSON.stringify({data: data}), 
-                        method: "POST",
-                        headers: {
-                            'Accept': 'application/json, text/plain, */*',
-                            'Content-Type': 'application/json',
-                            "authtoken": data.idToken
-                          },
-                    })
-                   
-                })
-                .then((res) => {
-                    if(res.ok){ 
-                        setAdmin(true);
-                        return res.json()
-                    }
-                    else {
-                        return res.json().then((data) => {
-                          
-                            setAdmin(false);
-                         
-                        })
-                    }
-    
-                })
-               
-               
-                .then((data)=> {
-                    console.log("role check", data)
-                    const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
-                    authCtx.login(data.idToken, expirationTime.toISOString());
-                    history.replace(`${redirectLink}`)// redirect user to main page
-                })
-                .catch((err)=> {
-                    console.error("error", err);
-                })
-                resetEmail();
-                resetPassword();
+           userStorage.loginUser(enteredEmail,enteredPassword)
+            .then((data) => {
+                const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
+                authCtx.login(data.idToken, expirationTime.toISOString());
+                history.replace(`${redirectLink}`); 
+            })
+            .catch(console.log)
+             
+            resetEmail();
+            resetPassword();
         } else {
-            if(!formIsValid){
-                return;
-            }
-            url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY}`;
-            fetch(url,
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        email:enteredEmail,
-                        password: enteredPassword,
-                        returnSecureToken: true
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-                ).then((res) => {
-                    if(res.ok){
-                        return res.json()
-                    } else {
-                        return res.json().then((data)=> {
-                           //show error modal
-                           let errorMessage = data.error.errors[0].message;
-                          throw new Error(errorMessage);
-                        })
-                    }
-                }).then((data)=> {
-                   
-                    fetch("http://localhost:8080/users/signup",{
-                        method: "POST",
-                        body: JSON.stringify({
-                            email: data.email,
-                            role: "seller"
-                        }),
-                        headers: {
-                            'Accept': 'application/json, text/plain, */*',
-                            'Content-Type': 'application/json'
-                          }
-                    }).then((res) => console.log(res))
-                    console.log(data)
-                   history.replace('/seller')
+            // if(!formIsValid){
+            //     return;
+            // }
+            userStorage.signupFirebase(enteredEmail,enteredPassword)
+                .then((data)=> {
+                    userStorage.signupLocal(data);
+                    history.replace('/seller');
                 })
-                .catch((err)=> {
-                    alert(err.message);
-                })
+                .catch(console.log)
     
         }
             
@@ -207,7 +201,7 @@ const SellerAuth = ({redirectLink}) => {
                                 onChange={emailChangeHandler}
                                 onBlur={emailBlurHandler} 
                                 ref={emailInputRef}/>
-                                {!isLogin && !emailHasError && <small>Email must be in valid format.</small>}
+                                {/* {!isLogin && !emailHasError && <small>Email must be in valid format.</small>} */}
                         </div>
                         <div className="my-5 text-sm">
                             <label htmlFor="password" className="block text-black">Password</label>
@@ -220,7 +214,7 @@ const SellerAuth = ({redirectLink}) => {
                                 onChange={passwordChangeHandler}
                                 onBlur={passwordBlurHandler}
                                 />
-                                {!isLogin && !passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>}
+                                {/* {!isLogin && !passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>} */}
                             <div className="flex justify-end mt-2 text-xs text-gray-600">
                            
                             </div>
@@ -234,7 +228,7 @@ const SellerAuth = ({redirectLink}) => {
                             <button 
                               
                                 className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full"
-                                disabled={formIsValid}
+                             
                                  >
                             Create  Account </button>    
                     }   

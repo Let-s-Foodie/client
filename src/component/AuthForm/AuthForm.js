@@ -51,7 +51,6 @@ const NewAuthForm = ({redirectLink}) => {
         async loginUser(id,password){
           
            const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY}`;
-           console.log(`url is ${url}`)
            const response = await fetch(url,{
                 method: 'POST',
                 body: JSON.stringify({
