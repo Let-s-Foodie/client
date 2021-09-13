@@ -1,4 +1,4 @@
-import {useState, useRef, useContext } from 'react';
+import {useState,  useContext } from 'react';
 import {useHistory} from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
 import useInput from '../hooks/use-input';
@@ -14,8 +14,7 @@ const NewAuthForm = ({redirectLink}) => {
     const [isLogin, setIsLogin ] = useState(true);
     const [authError,setError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
-    const emailInputRef = useRef();
-    const passwordInputRef = useRef();
+    
     const authCtx = useContext(AuthContext);
     const history = useHistory();
     const cancleHandler = () => {
@@ -24,7 +23,7 @@ const NewAuthForm = ({redirectLink}) => {
     
 
     const {
-       
+        value: enteredEmail,
         isValid: emailIsValid,
         hasError: emailHasError,
         valueChangeHandler: emailChangeHandler,
@@ -33,7 +32,7 @@ const NewAuthForm = ({redirectLink}) => {
     } = useInput(isEmail);
 
     const {
-        
+        value: enteredPassword,
         isValid: passwordIsValid,
         hasError: passwordHasError,
         valueChangeHandler: passwordChangeHandler,
@@ -44,6 +43,8 @@ const NewAuthForm = ({redirectLink}) => {
     if(emailIsValid && passwordIsValid){
         formIsValid = true;
     }
+    const emailClasses = (emailIsValid || isLogin) ? "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" : "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-red-100 w-full";
+    const passwordClasses = (passwordIsValid || isLogin)? "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" : "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-red-100 w-full";
     const switchAuthModeHandler = () => {
         setIsLogin((prevState) => !prevState);
     };
@@ -91,9 +92,13 @@ const NewAuthForm = ({redirectLink}) => {
                 })
                 if(!response.ok){
                     const errorMessage = await response.json().then(data =>
-                        data.error.errors[0].message    
+                        
+                        data.error.errors[0].message 
                     )
-                  
+                        
+                    //an account with Email "" already exists
+                    setErrorMsg(errorMessage.toLowerCase().replace('_', ' '));
+                    setError(true);
                     throw new Error(errorMessage)
                 }
                 const success = await response.json();
@@ -125,9 +130,9 @@ const NewAuthForm = ({redirectLink}) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const enteredEmail = emailInputRef.current.value;
-        const enteredPassword = passwordInputRef.current.value;
+      
         //Add Validation
+       
        
         const userStorage = new UserStorage();
         if(isLogin) {
@@ -144,9 +149,9 @@ const NewAuthForm = ({redirectLink}) => {
                 resetEmail();
                 resetPassword();
         } else {
-            // if(!formIsValid){
-            //     return;
-            // }
+            if(!formIsValid){
+                return;
+            }
         
             userStorage.signupFirebase(enteredEmail,enteredPassword)
                 .then((data)=> {
@@ -179,21 +184,21 @@ const NewAuthForm = ({redirectLink}) => {
                             type="email" 
                             autoFocus 
                             id="email" 
-                            className="rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" 
+                            className={emailClasses}
                             placeholder="Email"
                             onChange={emailChangeHandler}
                             onBlur={emailBlurHandler} 
-                            ref={emailInputRef}/>
-                            {!isLogin && !emailHasError && <small>Email must be in valid format.</small>}
+                            value={enteredEmail}/>
+                            {!isLogin && emailHasError && <small>Email must be in valid format.</small>}
                     </div>
                     <div className="my-5 text-sm">
                         <label htmlFor="password" className="block text-black">Password</label>
                         <input 
                             type="password" 
                             id="password" 
-                            className="rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" 
+                            className={passwordClasses}
                             placeholder="Password" 
-                            ref={passwordInputRef}
+                            value={enteredPassword}
                             onChange={passwordChangeHandler}
                             onBlur={passwordBlurHandler}
                             />
@@ -211,7 +216,7 @@ const NewAuthForm = ({redirectLink}) => {
                         <button 
                           
                             className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full"
-                            // disabled={formIsValid}
+                            disabled={!formIsValid}
                              >
                         Create  Account </button>    
                 }   

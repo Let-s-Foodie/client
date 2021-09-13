@@ -4,14 +4,14 @@ const useInput = (validateValue,values) => {
     const [enteredValue, setEnterValue] = useState('');
     const [isTouched, setIsTouched] = useState(false);
 
-    let valueIsValid = !validateValue(enteredValue);
+    let valueIsValid = validateValue(enteredValue);
    
-    const hasError = !valueIsValid;
+    const hasError = !valueIsValid && isTouched;
    
     const valueChangeHandler = (event) => {
         
         setEnterValue(event.target.value);
-       return event.target.value
+      
     };
      useEffect(()=>{
        

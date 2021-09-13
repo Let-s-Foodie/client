@@ -1,4 +1,4 @@
-import {useState, useRef, useContext } from 'react';
+import {useState, useContext } from 'react';
 import {useHistory} from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
 import useInput from '../hooks/use-input';
@@ -15,8 +15,6 @@ const SellerAuth = ({redirectLink}) => {
     const [isAdmin, setAdmin] = useState(true);
     const [isLogin, setIsLogin ] = useState(true);
     const [errorMsg, setErrorMsg] = useState('');
-    const emailInputRef = useRef();
-    const passwordInputRef = useRef();
     const authCtx = useContext(AuthContext);
     const history = useHistory();
     const [authError, setError] = useState(false);
@@ -25,7 +23,7 @@ const SellerAuth = ({redirectLink}) => {
         setError(false);
     }
     const {
-       
+        value:enteredEmail,
         isValid: emailIsValid,
         hasError: emailHasError,
         valueChangeHandler: emailChangeHandler,
@@ -34,7 +32,7 @@ const SellerAuth = ({redirectLink}) => {
     } = useInput(isEmail);
 
     const {
-        
+        value:enteredPassword,
         isValid: passwordIsValid,
         hasError: passwordHasError,
         valueChangeHandler: passwordChangeHandler,
@@ -45,6 +43,9 @@ const SellerAuth = ({redirectLink}) => {
     if(emailIsValid && passwordIsValid){
         formIsValid = true;
     }
+    const emailClasses = (emailIsValid || isLogin) ? "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" : "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-red-100 w-full";
+    const passwordClasses = (passwordIsValid || isLogin)? "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" : "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-red-100 w-full";
+    const buttonClasses = (!formIsValid) ? "block text-center text-white bg-gray-400 p-3 duration-300 rounded-sm hover:bg-black w-full" : "block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full";
     const switchAuthModeHandler = () => {
         setIsLogin((prevState) => !prevState);
         setAdmin(true);
@@ -113,7 +114,7 @@ const SellerAuth = ({redirectLink}) => {
                 const errorMessage = await response.json().then(data => 
                     data.error.errors[0].message
                 )
-                setErrorMsg(errorMessage)
+                setErrorMsg(errorMessage.toLowerCase().replace('_', " "))
                 setError(true)
                 throw new Error(errorMessage);
             }
@@ -140,10 +141,8 @@ const SellerAuth = ({redirectLink}) => {
     }
     const submitHandler = (event) => {
         event.preventDefault();
-        const enteredEmail = emailInputRef.current.value;
-        const enteredPassword = passwordInputRef.current.value;
+       
         const userStorage = new UserStorage();
-
         //Add Validation
        
         
@@ -162,9 +161,9 @@ const SellerAuth = ({redirectLink}) => {
             resetEmail();
             resetPassword();
         } else {
-            // if(!formIsValid){
-            //     return;
-            // }
+            if(!formIsValid){
+                return;
+            }
             userStorage.signupFirebase(enteredEmail,enteredPassword)
                 .then((data)=> {
                     userStorage.signupLocal(data);
@@ -196,25 +195,25 @@ const SellerAuth = ({redirectLink}) => {
                                 type="email" 
                                 autoFocus 
                                 id="email" 
-                                className="rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" 
+                                className={emailClasses}
                                 placeholder="Email"
                                 onChange={emailChangeHandler}
                                 onBlur={emailBlurHandler} 
-                                ref={emailInputRef}/>
-                                {/* {!isLogin && !emailHasError && <small>Email must be in valid format.</small>} */}
+                               />
+                                {!isLogin && emailHasError && <small>Email must be in valid format.</small>}
                         </div>
                         <div className="my-5 text-sm">
                             <label htmlFor="password" className="block text-black">Password</label>
                             <input 
                                 type="password" 
                                 id="password" 
-                                className="rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" 
+                                className={passwordClasses} 
                                 placeholder="Password" 
-                                ref={passwordInputRef}
+                               
                                 onChange={passwordChangeHandler}
                                 onBlur={passwordBlurHandler}
                                 />
-                                {/* {!isLogin && !passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>} */}
+                                {!isLogin && passwordHasError && <small>Password must be at least 8 characters long contain a number and an upper case letter</small>}
                             <div className="flex justify-end mt-2 text-xs text-gray-600">
                            
                             </div>
@@ -227,8 +226,8 @@ const SellerAuth = ({redirectLink}) => {
                             :   
                             <button 
                               
-                                className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full"
-                             
+                                className={buttonClasses}
+                                disabled={!formIsValid}
                                  >
                             Create  Account </button>    
                     }   
