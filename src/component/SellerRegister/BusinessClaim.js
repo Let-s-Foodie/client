@@ -34,7 +34,7 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
    
    
     const {
-        
+        isValid: streetIsValid,
         hasError: streetHasError,
         valueChangeHandler: streetChangeHandler,
         inputBlurHandler: streetBlurHandler
@@ -64,11 +64,13 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
   
     useEffect(()=> {
        
-        if(nameIsValid && cityIsValid && stateIsValid && zipcodeIsValid){
+        if(nameIsValid && cityIsValid && stateIsValid && zipcodeIsValid && streetIsValid){
             setFormValid(true)
+        } else {
+            setFormValid(false)
         }
        
-    },[formIsValid,cityIsValid,stateIsValid,zipcodeIsValid])
+    },[formIsValid,cityIsValid,stateIsValid,zipcodeIsValid,streetIsValid])
 
     const submitHandler = (event) => {
 
