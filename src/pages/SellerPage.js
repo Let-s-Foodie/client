@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../component/Navbar'; 
 import {sellerBar} from '../component/Navbar/Data';
-import SellerHeroSection from '../component/HeroSection/SellerHeroSection';
+import SellerHeroSection from '../component/HeroSection/Seller/SellerHeroSection';
 import InfoSection from '../component/InfoSection';
 import { homeObjOne,homeObjTwo } from '../component/InfoSection/Data';
 import Footer from '../component/Footer';

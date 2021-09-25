@@ -12,8 +12,16 @@ const Main = () => {
   useEffect(() => {
    
     const URL = "http://localhost:8080/dishes";
-    fetch(URL)
-    .then((res)=>{return res.json()})
+    fetch(URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+     
+    })
+    .then((res)=>{
+      console.log(res)
+      return res.json()})
     .then((data)=> {
 
     

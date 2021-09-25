@@ -33,7 +33,7 @@ const Mainbar = ({toggle}) => {
         <>
             <Nav scrollNav={scrollNav}>
                 <NavbarContainer>
-                    <NavLogo to ='/seller'  onClick={toggleHome} scrollnav={scrollNav ? 1 : 0}>
+                    <NavLogo to ='/'  onClick={toggleHome} scrollnav={scrollNav ? 1 : 0}>
                         Randi
                     </NavLogo>
                     <MobileIcon  onClick={toggle}>

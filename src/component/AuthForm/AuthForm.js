@@ -47,6 +47,9 @@ const NewAuthForm = ({redirectLink}) => {
     const passwordClasses = (passwordIsValid || isLogin)? "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full" : "rounded-sm px-4 py-3 mt-3 focus:outline-none bg-red-100 w-full";
     const switchAuthModeHandler = () => {
         setIsLogin((prevState) => !prevState);
+        setError(false)
+        resetEmail();
+        resetPassword();
     };
     class UserStorage {
         async loginUser(id,password){

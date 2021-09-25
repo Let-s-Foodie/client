@@ -11,7 +11,7 @@ const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/);
 const isEmail = (value) => emailPattern.test(value);
 const isPassword = (value) => passwordPattern.test(value);
 
-const SellerAuth = ({redirectLink}) => {
+const SellerAuth = () => {
     const [isAdmin, setAdmin] = useState(true);
     const [isLogin, setIsLogin ] = useState(true);
     const [errorMsg, setErrorMsg] = useState('');
@@ -75,6 +75,7 @@ const SellerAuth = ({redirectLink}) => {
             }
 
             const user = await response.json();
+           
             const url2 = "http://localhost:8080/users/signin";
             const roleCheck = await fetch(url2, {
                 body: JSON.stringify({data: user}),
@@ -154,7 +155,7 @@ const SellerAuth = ({redirectLink}) => {
             .then((data) => {
                 const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
                 authCtx.login(data.idToken, expirationTime.toISOString());
-                history.replace(`${redirectLink}`); 
+                history.replace("/seller/home"); 
             })
             .catch(console.log)
              

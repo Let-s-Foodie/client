@@ -1,19 +1,25 @@
 import React, {useState, useRef, useContext} from 'react'
+import {useHistory,useParams} from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
 import Hoc from '../hoc/hoc';
-const DishForm = () => {
+import Navbar from '../Navbar/Seller/index'; 
+import {sellerMainbar} from '../Navbar/Data';
+const DishForm = ({imageUpdoader}) => {
     const authCtx = useContext(AuthContext);
     const nameInputRef = useRef();
     const categoryRef = useRef();
+    const history = useHistory();
+    const {shopId} = useParams();
     const [fileInputState,setFileInputState] = useState('');
-    const [selectedFile, setSelectedFile] = useState('');
     const [previewSource, setPreviewSource] = useState('');
     const [imageUrl, setImageurl] = useState('');
-    const handlerFileInputChange = (e) => {
+    const handlerFileInputChange = async(e) => {
         const file = e.target.files[0];
-        console.log(file)
-        previewFile(file);
-        setSelectedFile(file);
+        const fileBuffer = await handlerFileInput(file);
+        const uploaded = await imageUpdoader.upload(fileBuffer,authCtx);
+        previewFile(file); 
+    
+        setImageurl(uploaded.image_url)
         setFileInputState(e.target.value);
     }
     const previewFile = (file) => {
@@ -23,65 +29,42 @@ const DishForm = () => {
             setPreviewSource(reader.result);
         }
     }
-    const uploadImage = async (base64EncodedImage) => { 
-       
-        let URL = 'http://localhost:8080/image/uploadimages';
-        try {
-            let res = await fetch(URL,{
-             method: 'POST',
-             body: JSON.stringify({data: base64EncodedImage}),
-             headers: {'Content-Type': 'application/json',
-                        'authtoken': authCtx.token
-                        },
-            })
-           let imageUrl = await res.json();
-          
-            setImageurl(imageUrl);
-            setFileInputState('');
-            setPreviewSource('');
-        } catch(err){
-            console.log(err);
- 
-        }
-    }
-    const handlerFileInput = () => {
-     
+   
+    function handlerFileInput (file) {
+      if(!file) return;
+      return new Promise((resolve,reject) => {
+        const reader = new FileReader();
     
-      if(!selectedFile) return;
-      const reader = new FileReader();
-      reader.readAsDataURL(selectedFile);
       reader.onloadend = () => {
-          uploadImage(reader.result);
+        
          
+            resolve(reader.result);
+         
+
       };
+      reader.readAsDataURL(file);
       reader.onerror = () => {
           alert('Something went wrong')
       }
-       
+      })
       
-     
- 
-    }
+    };
   
      const submitHandler = (event) => {
          event.preventDefault();
          const enteredName = nameInputRef.current.value;
-        
-         const sellerId = 5;
-         
-        
-        
          const enteredCategory = categoryRef.current.value;
          const dishData = {};
          dishData.name = enteredName;
-        
          dishData.category = enteredCategory;
-         dishData.sellerId = sellerId;
+       
          const URL = "http://localhost:8080/dishes";
-         handlerFileInput();
-         let image_ = imageUrl.image_url;
+         
+         let image_ = imageUrl;
+         
          dishData.image = image_;
-         console.log("image test ",image_);
+         dishData.userId = shopId;
+         console.log("dishData",dishData)
          fetch(URL,{
              method: "POST",
              body: JSON.stringify(dishData),
@@ -92,6 +75,7 @@ const DishForm = () => {
                },
          })
          .then((res) => {
+             console.log("res", res)
              if(res.ok){
                  return res.json();
              } else {
@@ -104,6 +88,7 @@ const DishForm = () => {
          })
          .then(resData => {
              console.log(resData)
+             history.replace('/seller/home');
          }) 
          .catch((err) => {
              alert(err.message)
@@ -111,6 +96,7 @@ const DishForm = () => {
      }
      return (
          <Hoc>
+             <Navbar {...sellerMainbar}/>
              <div>
                  <div className="md:grid md:grid-cols-3 md:gap-6 m-20">
                      <div className="md:col-span-1">

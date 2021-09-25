@@ -23,4 +23,9 @@ export const homeBar = {
     contentThree:"Support",
    
  }
+
+ export const sellerMainbar = {
+   logoLink: "/seller/home",
+   logoContent: "Randi for business"
+ }
  
