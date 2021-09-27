@@ -5,7 +5,7 @@ import MainPage from "./pages/MainPage";
 import {BrowserRouter as Router,Route,Switch, useParams, Redirect} from 'react-router-dom';
 import AuthForm from './component/AuthForm/AuthForm';
 import SellerPage from './pages/SellerPage';
-import SellerInfoPage from './pages/SellerInfoPage';
+import SellerHome from './pages/SellerHome';
 import SellerResgisterPage from './pages/SellerRegisterPage';
 import DishForm from '../src/component/DishForm/DishForm.jsx';
 import AuthContext from './store/auth-context';
@@ -31,7 +31,7 @@ const App = () => {
             {!authCtx.isLoggedIn ? <SellerAuth /> : <Redirect to="/seller/home"/>}      
           </Route>
           <Route path="/seller/home">
-            {authCtx.isLoggedIn ? <SellerInfoPage /> : <Redirect to="/seller/auth" />}
+            {authCtx.isLoggedIn ? <SellerHome /> : <Redirect to="/seller/auth" />}
           </Route>
           <Route path ="/seller/shop/:shopId">
             {authCtx.isLoggedIn ? <ShopDetailPage/> : <Redirect to="/seller/auth" />}

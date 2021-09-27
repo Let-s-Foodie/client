@@ -1,5 +1,6 @@
 import React,{useEffect, useState, useContext} from 'react'
 import AuthContext from '../../../store/auth-context';
+import {HeroContainer} from './SellerMainHeroElement';
 const SellerMainHero = () => {
     const [sellerInfo, setSellerInfo] = useState([]);
     const authCtx = useContext(AuthContext);
@@ -27,11 +28,12 @@ const SellerMainHero = () => {
     ,[])
     return (
         <>
+            <HeroContainer>
              <div className="flex flex-wrap">
            {sellerInfo.map((info)=> (
 
        
-                    <div className="md:w-1/2 lg:w-1/3 py-4 px-4" key = {info.id}>
+                    <div className="py-4 px-4" key = {info.id}>
                         <div className=" ">
                             <a href={"/seller/shop/" + info.id}>
                                 <div className="bg-white relative shadow p-2 rounded-lg text-gray-800 hover:shadow-lg">
@@ -54,6 +56,7 @@ const SellerMainHero = () => {
 		       
            ))}
            </div>
+           </HeroContainer>
         </>
     )
 }
