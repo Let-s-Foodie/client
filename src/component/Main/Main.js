@@ -11,12 +11,18 @@ const Main = () => {
 
   useEffect(() => {
    
-    const URL = "http://localhost:8080/dishes";
-    fetch(URL)
-    .then((res)=>{return res.json()})
+    //const URL = "http://localhost:8000/dishes";
+    const URL ="http://localhost:8000/random/feeds"
+    fetch(URL, {
+      method: 'GET',
+
+    })
+    .then((res)=>{
+      console.log(res)
+      return res.json()})
     .then((data)=> {
 
-    
+    console.log(data)
     setFoodinfo(data);
     if(foodInfo.length <= 1) setLength("loading")
     })

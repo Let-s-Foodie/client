@@ -9,19 +9,22 @@ const useInput = (validateValue,values) => {
     const hasError = !valueIsValid && isTouched;
    
     const valueChangeHandler = (event) => {
-        
+     
         setEnterValue(event.target.value);
       
     };
      useEffect(()=>{
        
         if(values){
+          
            setEnterValue(values)
+           setIsTouched(true)
+         
         }
         
-    },[values])
+    },[])
     const inputBlurHandler = (event) => {
-        
+     
         setIsTouched(true); 
         
        

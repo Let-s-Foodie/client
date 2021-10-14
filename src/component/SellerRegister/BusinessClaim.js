@@ -1,30 +1,18 @@
 import React,{useRef, useEffect,useState } from 'react';
 import useInput from "../hooks/use-input";
 
-const isEmpty = (value) => {if(value ==="") return true;};
+const isEmpty = (value) => value.trim() != '';
+
 const BusinessClaim = ({values,nextStep,handleChange}) => {
     
    
-    const nameRef = useRef();
-    const countryRef = useRef();
-    const streetRef = useRef();
-    const cityRef = useRef();
-    const stateRef = useRef();
-    const zipcodeRef = useRef();
-    const [formIsValid,setFormValid] = useState(false);
     
- 
-    const beforeUnloadListener = (event) => {
-        event.preventDefault();
-        return event.returnValue = "Are you sure you want to exit?";
-    }
-    if(window.performance){
-        if(performance.navigation.type === 1 && nameRef.current !== undefined){
-          
-            window.addEventListener("beforeunload", beforeUnloadListener, {capture: true});
-        }
-    }
+    
+    const [formIsvalid, setFormIsvalid]= useState(false);
+    let countryRef = useRef();
+   
     const {
+        value: enteredName,
         isValid: nameIsValid,
         hasError: nameHasError,
         valueChangeHandler: nameChangeHandler,
@@ -34,20 +22,22 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
    
    
     const {
+        value: enteredStreet,
         isValid: streetIsValid,
         hasError: streetHasError,
         valueChangeHandler: streetChangeHandler,
         inputBlurHandler: streetBlurHandler
-    } = useInput(isEmpty,values.street);
+    } = useInput(isEmpty, values.street);
     const {
+        value: enteredCity,
         isValid: cityIsValid,
         hasError: cityHasError,
         valueChangeHandler: cityChangeHandler,
         inputBlurHandler: cityBlurHandler,
       
-    } = useInput(isEmpty,values.city);
+    } = useInput(isEmpty, values.city);
     const {
-      
+        value: enteredState,
         isValid: stateIsValid,
         hasError: stateHasError,
         valueChangeHandler: stateChangeHandler,
@@ -55,34 +45,41 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
    
     } = useInput(isEmpty,values.state);
     const {
+        value: enteredZip,
         isValid: zipcodeIsValid,
         hasError: zipcodeHasError,
         valueChangeHandler: zipcodeChangeHandler,
         inputBlurHandler: zipcodeBlurHandler,
        
-    } = useInput(isEmpty,values.zipcode);
-  
+    } = useInput(isEmpty, values.zipcode);
+   
+    const beforeUnloadListener = (event) => {
+        event.preventDefault();
+        return event.returnValue = "Are you sure you want to exit?";
+    }
+    if(window.performance){
+        if(performance.navigation.type === 1 && enteredName){
+          
+            window.addEventListener("beforeunload", beforeUnloadListener, {capture: true});
+        }
+    }
     useEffect(()=> {
        
-        if(nameIsValid && cityIsValid && stateIsValid && zipcodeIsValid && streetIsValid){
-            setFormValid(true)
+        if((nameIsValid && cityIsValid && stateIsValid && zipcodeIsValid && streetIsValid) ){
+            setFormIsvalid(true)
+           
         } else {
-            setFormValid(false)
+            setFormIsvalid(false)
         }
        
-    },[formIsValid,cityIsValid,stateIsValid,zipcodeIsValid,streetIsValid])
-
+    },[nameIsValid,cityIsValid,stateIsValid,zipcodeIsValid,streetIsValid])
+     
     const submitHandler = (event) => {
 
         event.preventDefault();
-        if(!formIsValid) return;
+        if(!formIsvalid) return;
         const enteredCountry = countryRef.current.value;
-        const enteredStreet = streetRef.current.value;
-        const enteredCity = cityRef.current.value;
-        const enteredState = stateRef.current.value;
-        const enteredZip = zipcodeRef.current.value;
-        const enteredName = nameRef.current.value;
-        
+      
         handleChange('business',enteredName)
         handleChange('country', enteredCountry)
         handleChange('street', enteredStreet)
@@ -117,7 +114,6 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                         </label>
                                         <input
                                             type="text"
-                                            ref={nameRef}
                                             placeholder="name"
                                             onChange={nameChangeHandler}
                                             onBlur={nameBlurHandler}
@@ -126,10 +122,6 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                         />
                                         {nameHasError && <small className="text-gray-600">Please fill out this field</small>}
                                         </div>
-
-                 
-
-                                       
 
                                         <div className="col-span-6 sm:col-span-3">
                                         <label htmlFor="country" className="block text-sm font-medium text-gray-700">
@@ -140,14 +132,15 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             name="country"
                                             placeholder="country"
                                             ref={countryRef}
-                                            defaultValue={values.country}
+                                           
                                             className="w-full py-2 px-3 border border-gray-300 bg-white text-black rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                         >
-                                            <option>United States</option>
-                                            <option>Canada</option>
-                                            <option>Mexico</option>
+                                           
+                                            <option value="United States">United States</option>
+                                            <option value="Canada">Canada</option>
+                                            <option value="Mexico">Mexico</option>
                                         </select>
-                                   
+                                      
                                         </div>
 
                                         <div className="col-span-6">
@@ -159,7 +152,6 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             name="street-address"
                                             id="street-address"
                                             placeholder="123 Main St"
-                                            ref={streetRef}
                                             onChange={streetChangeHandler}
                                             onBlur={streetBlurHandler}
                                             defaultValue={values.street}
@@ -176,7 +168,6 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             type="text"
                                             name="city"
                                             id="city"
-                                            ref={cityRef}
                                             placeholder="city"
                                             onBlur={cityBlurHandler}
                                             onChange={cityChangeHandler}
@@ -195,7 +186,6 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             name="state"
                                             id="state"
                                             placeholder="state"
-                                            ref={stateRef}
                                             onBlur={stateBlurHandler}
                                             onChange={stateChangeHandler}
                                             defaultValue={values.state}
@@ -212,7 +202,6 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             type="text"
                                             name="postal-code"
                                             id="postal-code"
-                                           ref={zipcodeRef}
                                            onChange={zipcodeChangeHandler}
                                            onBlur={zipcodeBlurHandler}
                                            placeholder="Zipcode"
@@ -229,7 +218,7 @@ const BusinessClaim = ({values,nextStep,handleChange}) => {
                                             type="submit"
                                             onClick={submitHandler}
                                             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50" 
-                                           disabled = {!formIsValid}
+                                           disabled = {!formIsvalid}
                                         >
                                            
                                             Next
