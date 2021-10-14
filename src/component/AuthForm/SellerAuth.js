@@ -2,7 +2,7 @@ import {useState, useContext } from 'react';
 import {useHistory} from 'react-router-dom';
 import AuthContext from '../../store/auth-context';
 import useInput from '../hooks/use-input';
-import ErrorSeller  from './Error/ErrorSeller';
+import ErrorSeller  from './Error/ErrorSeller.jsx';
 import ErrorAuth from './Error/ErrorAuth';
 
 
@@ -11,7 +11,7 @@ const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/);
 const isEmail = (value) => emailPattern.test(value);
 const isPassword = (value) => passwordPattern.test(value);
 
-const SellerAuth = ({redirectLink}) => {
+const SellerAuth = ({userStorage}) => {
     const [isAdmin, setAdmin] = useState(true);
     const [isLogin, setIsLogin ] = useState(true);
     const [errorMsg, setErrorMsg] = useState('');
@@ -51,98 +51,11 @@ const SellerAuth = ({redirectLink}) => {
         setAdmin(true);
         setError(false);
     };
-    class UserStorage {
-        async loginUser(id,password){
-            const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY}`;
-            const response = await fetch(url,{
-                method: 'POST',
-                body: JSON.stringify({
-                    email:id,
-                    password:password,
-                    returnSecureToken: true
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-
-            if(!response.ok){
-                const errorMessage = "The email address or password you entered is incorrect.";
-                setErrorMsg(errorMessage);
-                setError(true);
-                const error = new Error(errorMessage);
-                throw error;
-            }
-
-            const user = await response.json();
-            const url2 = "http://localhost:8080/users/signin";
-            const roleCheck = await fetch(url2, {
-                body: JSON.stringify({data: user}),
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json, text/plain, ',
-                    'Content-Type': 'application/json',
-                    "authtoken": user.idToken
-                }
-            })
-            if(!roleCheck.ok){
-                setAdmin(false);
-                const error = new Error("Admin error");
-                throw error;
-            }
-            setAdmin(true);
-            const userAdmin = await roleCheck.json();
-
-            return userAdmin;
-         
-        }
-        async signupFirebase(id,password){
-            const url =`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY}`;
-            const response = await fetch(url,{
-                method: 'POST',
-                body: JSON.stringify({
-                    email:id,
-                    password: password,
-                    returnSecureToken: true
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            if(!response.ok){
-               
-                const errorMessage = await response.json().then(data => 
-                    data.error.errors[0].message
-                )
-                setErrorMsg(errorMessage.toLowerCase().replace('_', " "))
-                setError(true)
-                throw new Error(errorMessage);
-            }
-            const user = await response.json();
-            return user;
-        }
-        async signupLocal(data){
-            const url = "http://localhost:8080/users/signup";
-            const response = await fetch(url,{
-                method: "POST",
-                body: JSON.stringify({
-                    email: data.email,
-                    role: "seller"
-                }),
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                  }
-            })
-
-            if(!response.ok) throw new Error("failed to update to local database");
-            return response;
-        }
-    }
+   
     const submitHandler = (event) => {
         event.preventDefault();
        
-        const userStorage = new UserStorage();
+      
         //Add Validation
        
         
@@ -150,23 +63,31 @@ const SellerAuth = ({redirectLink}) => {
             //Check user's role 
                
             
-           userStorage.loginUser(enteredEmail,enteredPassword)
+            userStorage.loginSeller(enteredEmail,enteredPassword)
             .then((data) => {
+               
+                setAdmin(true);
                 const expirationTime = new Date(new Date().getTime() + (+data.expiresIn * 1000));
                 authCtx.login(data.idToken, expirationTime.toISOString());
-                history.replace(`${redirectLink}`); 
+                history.replace("/seller/home"); 
             })
-            .catch(console.log)
-             
-            resetEmail();
-            resetPassword();
+            .catch((err)=>{
+                console.log("error",err.message)
+                
+                setErrorMsg(err.message)
+                err.message === "Admin error"?  setAdmin(false) : setError(true);
+               
+            })
+                //resetEmail();
+                //resetPassword();
+            
         } else {
             if(!formIsValid){
                 return;
             }
             userStorage.signupFirebase(enteredEmail,enteredPassword)
                 .then((data)=> {
-                    userStorage.signupLocal(data);
+                    userStorage.signupLocal(data,"seller");
                     history.replace('/seller');
                 })
                 .catch(console.log)

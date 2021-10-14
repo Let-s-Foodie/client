@@ -23,7 +23,7 @@ const Home = () => {
 
     useEffect(()=>{
         if(loaded){
-            const URL = "http://localhost:8080/random/local";
+            const URL = "http://localhost:8000/random/local";
             fetch(URL, {
                 method: "POST",
                 body: JSON.stringify({"lat": lat, "lng": lng}),

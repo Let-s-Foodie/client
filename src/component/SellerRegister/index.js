@@ -2,7 +2,7 @@ import React, {useState,useEffect} from 'react';
 import {
     BrowserRouter as Router,
     Route,
-    Redirect
+   
   } from "react-router-dom";
 import img from '../../static/svg-1.svg';
 import BusinessClaim from './BusinessClaim';
@@ -31,7 +31,7 @@ const SellerRegister = ({lightBg, imgStart}) => {
 
     const {business, country,street,city,state,instagram,zipcode, facebook, yelp, homepage, youtube} = registerSteps;
     const values = { business, country,street,city,state,instagram,zipcode, facebook, yelp, homepage, youtube};
-    const [redirectTo, setRedirect] = useState(false);
+   
 
     const nextStep = () => {
         const {step} = registerSteps;
@@ -52,18 +52,7 @@ const SellerRegister = ({lightBg, imgStart}) => {
      
     }
    
-    // useEffect(()=>{
-      
-      
-    //     setRedirect(true);
-        
-      
-    // },[step,nextStep,prevStep])
-    // if(redirectTo) {
-        
-    //     setRedirect(false);
-    //     return   <Redirect to={`/seller/register/${step}`} />;
-    // }
+   
     
  
     const handleChange = (input,value) => {

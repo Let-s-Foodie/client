@@ -4,10 +4,12 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AuthContextProvider } from './store/auth-context';
+import UserStorage from './service/auth';
+const userStorage = new UserStorage(process.env.REACT_APP_API_KEY);
+
 ReactDOM.render(
     <AuthContextProvider>
-        
-            <App />
+        <App userStorage={userStorage}/>
     </AuthContextProvider>
  ,
     document.getElementById("root"));
