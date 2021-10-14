@@ -2,7 +2,7 @@
 
 class ImageUploader {
    async upload(file,authCtx) {
-    let URL = 'http://localhost:8080/image/uploadimages';
+    let URL = 'http://localhost:8000/image/uploadimages';
    
     try{
         const result = await fetch(URL,{

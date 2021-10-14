@@ -58,7 +58,7 @@ const DishForm = ({imageUpdoader}) => {
          dishData.name = enteredName;
          dishData.category = enteredCategory;
        
-         const URL = "http://localhost:8080/dishes";
+         const URL = `http://localhost:8000/dishes/seller/${shopId}`;
          
          let image_ = imageUrl;
          

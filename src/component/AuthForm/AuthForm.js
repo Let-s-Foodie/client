@@ -8,7 +8,7 @@ const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/);
 const isEmail = (value) => emailPattern.test(value);
 const isPassword = (value) => passwordPattern.test(value);
 
-const NewAuthForm = ({redirectLink}) => {
+const AuthForm = ({redirectLink,userStorage}) => {
 
 
     const [isLogin, setIsLogin ] = useState(true);
@@ -51,93 +51,14 @@ const NewAuthForm = ({redirectLink}) => {
         resetEmail();
         resetPassword();
     };
-    class UserStorage {
-        async loginUser(id,password){
-          
-           const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY}`;
-           const response = await fetch(url,{
-                method: 'POST',
-                body: JSON.stringify({
-                    email:id,
-                    password: password,
-                    returnSecureToken: true
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                
-                }
-           })
-           if(!response.ok){
-               const errorMessage = "The email address or password you entered is incorrect.";
-               setErrorMsg(errorMessage);
-               setError(true);
-               const error = new Error(errorMessage)
-               throw error;
-           } 
-
-           const user = await response.json();
-           return user;
-        }
-
-        async signupFirebase(id, password) {
-            const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY}`;
-         
-                const response = await fetch(url,{
-                    method: 'POST',
-                    body: JSON.stringify({
-                        email:id,
-                        password: password,
-                        returnSecureToken: true
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                if(!response.ok){
-                    const errorMessage = await response.json().then(data =>
-                        
-                        data.error.errors[0].message 
-                    )
-                        
-                    //an account with Email "" already exists
-                    setErrorMsg(errorMessage.toLowerCase().replace('_', ' '));
-                    setError(true);
-                    throw new Error(errorMessage)
-                }
-                const success = await response.json();
-                return success;
-           
-           
-
-        }
-
-        async signupLocal(data){
-            const url = "http://localhost:8080/users/signup";
-            const response = await fetch(url,{
-                method: "POST",
-                body: JSON.stringify({
-                    email: data.email,
-                    role: "user"
-                }),
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                }
-            })
-            if(!response.ok) throw new Error("failed to update to local database");
-           
-            return response;
-
-        }
-    }   
-
+  
     const submitHandler = (event) => {
         event.preventDefault();
       
         //Add Validation
        
        
-        const userStorage = new UserStorage();
+       
         if(isLogin) {
            
          userStorage.loginUser(enteredEmail,enteredPassword)
@@ -147,7 +68,11 @@ const NewAuthForm = ({redirectLink}) => {
                     history.replace(`${redirectLink}`)// redirect user to main page
           })
          .catch((err)=> {
-                alert(err)
+                console.log(
+                    "error from authform", err
+                )
+                setErrorMsg(err.message);
+                setError(true);
          })
                 resetEmail();
                 resetPassword();
@@ -158,10 +83,13 @@ const NewAuthForm = ({redirectLink}) => {
         
             userStorage.signupFirebase(enteredEmail,enteredPassword)
                 .then((data)=> {
-                        userStorage.signupLocal(data);
+                        userStorage.signupLocal(data,"user");
                         history.replace('/')
                 })
-                .catch(console.error)
+                .catch((err)=>{
+                    setError(err)
+                    setError(true);
+                })
              
         
         
@@ -251,5 +179,5 @@ const NewAuthForm = ({redirectLink}) => {
     )
 }
 
-export default NewAuthForm;
+export default AuthForm;
 

@@ -6,7 +6,7 @@ const SellerMainHero = () => {
     const authCtx = useContext(AuthContext);
 
     useEffect(()=> {
-        const URL =`http://localhost:8080/sellers/user/:userId`;
+        const URL =`http://localhost:8000/sellers/user/:userId`;
         fetch(URL,{
           
             method:"GET",

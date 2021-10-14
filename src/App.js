@@ -11,9 +11,9 @@ import DishForm from '../src/component/DishForm/DishForm.jsx';
 import AuthContext from './store/auth-context';
 import Home from "./pages/home";
 import SellerAuth from '../src/component/AuthForm/SellerAuth';
-import ImageUploader from './component/Services/image_uploader';
+import ImageUploader from './service/image_uploader';
 import ShopDetailPage from './pages/ShopDetailPage';
-const App = () => {
+const App = ({userStorage}) => {
   const imageUploader = new ImageUploader();
   const authCtx = useContext(AuthContext);
   
@@ -22,13 +22,13 @@ const App = () => {
 
       <Switch>
           <Route path="/" component={Home} exact /> 
-          {!authCtx.isLoggedIn && <Route path="/auth" ><AuthForm redirectLink="/"/></Route>}
+          {!authCtx.isLoggedIn && <Route path="/auth" ><AuthForm userStorage={userStorage} redirectLink="/"/></Route>}
           <Route path="/mainpage" component={MainPage} exact />
           <Route path="/seller" component={SellerPage} exact/>
           {/* Protecting front end page */}
        
           <Route path="/seller/auth">
-            {!authCtx.isLoggedIn ? <SellerAuth /> : <Redirect to="/seller/home"/>}      
+            {!authCtx.isLoggedIn ? <SellerAuth userStorage={userStorage} /> : <Redirect to="/seller/home"/>}      
           </Route>
           <Route path="/seller/home">
             {authCtx.isLoggedIn ? <SellerHome /> : <Redirect to="/seller/auth" />}
