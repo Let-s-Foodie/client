@@ -1,4 +1,4 @@
-import {React,useContext} from "react";
+import {React,useContext,useEffect,useState} from "react";
 
 
 import MainPage from "./pages/MainPage";
@@ -13,17 +13,55 @@ import Home from "./pages/home";
 import SellerAuth from '../src/component/AuthForm/SellerAuth';
 import ImageUploader from './service/image_uploader';
 import ShopDetailPage from './pages/ShopDetailPage';
-const App = ({userStorage}) => {
+import Yelp from './service/yelp';
+import useGeoLocation from './component/hooks/useGeoLocation'
+const App = ({userStorage,dishes}) => {
   const imageUploader = new ImageUploader();
   const authCtx = useContext(AuthContext);
-  
+  const [dishLists, setDishLists] = useState([]);
+  const [location, setLocation] = useState({});
+  const {
+    loaded,
+    coordinates: {lat,lng},
+  } = useGeoLocation();
+
+  const yelp = new Yelp(lat,lng)
+   /** local database, 
+         * [{}]
+         * category
+         * id
+         * image
+         * name
+         * sellerId
+        */
+       /** yelp
+        * {businesses [{}],...}
+       */
+        //setDishLists(data)
+  useEffect(()=> {
+    const dishArr = []
+    dishes
+      .getAll()
+      .then(dishes => {
+        dishes.map((dish) => dishArr.push(dish))
+      })
+      if(loaded){
+        yelp.getAll()
+        .then((data) => {
+          data.data.map((item)=> dishArr.push(item))
+          setDishLists(dishArr)
+          setLocation({lat, lng})
+        })
+      }
+  },[dishes,loaded])
   return (
     <Router>
 
       <Switch>
           <Route path="/" component={Home} exact /> 
           {!authCtx.isLoggedIn && <Route path="/auth" ><AuthForm userStorage={userStorage} redirectLink="/"/></Route>}
-          <Route path="/mainpage" component={MainPage} exact />
+         
+          <Route path="/mainpage"><MainPage dishLists={dishLists} location={location}/></Route>
           <Route path="/seller" component={SellerPage} exact/>
           {/* Protecting front end page */}
        
