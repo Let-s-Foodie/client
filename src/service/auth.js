@@ -2,10 +2,10 @@ class UserStorage {
     constructor(key) {
         this.key = key;
     }
-    async loginUser(id,password){
+    async loginwithFirebase(id,password){
        
        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.key}`;
-       console.log("id, password",id, password)
+       
        const response = await fetch(url,{
             method: 'POST',
             body: JSON.stringify({
@@ -40,20 +40,24 @@ class UserStorage {
                 "authtoken": user.idToken
             }
         })
-
-        if(!roleCheck.ok){
-            const error = new Error("Admin error")
-           
-            throw error;
-        }
-        console.log("rolecheck", roleCheck)
-        const userAdmin = await roleCheck.json();
-        return userAdmin;
+      
+        const userInfo = await roleCheck.json();
+        return userInfo;
     }
     async loginSeller(id,password){
-        const user = await this.loginUser(id,password);
+        const user = await this.loginwithFirebase(id,password);
         const roles = await this.checkRole(user);
         return roles;
+    }
+    async loginUser(id,password){
+        const user = await this.loginwithFirebase(id,password);
+        const userRole = await this.checkRole(user);
+        console.log("userRole",userRole)
+        if(userRole.role === 'user' ) { 
+            return {user:user, role:"user"}
+        } 
+        return {user:user, role: "seller"}
+
     }
     async signupFirebase(id, password) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.key}`;

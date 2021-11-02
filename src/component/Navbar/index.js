@@ -40,7 +40,7 @@ const Navbar = ({toggle,logoLink,logoContent,linktoOne,linktoTwo,linktoThree,con
                     <NavLogo to ={logoLink}  onClick={toggleHome} scrollnav={scrollNav ? 1 : 0}>
                        {logoContent}
                     </NavLogo>
-                    <MobileIcon  onClick={toggle}>
+                    <MobileIcon onClick={toggle}>
                         <FaBars/>
                     </MobileIcon>
                     <NavMenu>
