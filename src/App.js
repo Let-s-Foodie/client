@@ -62,14 +62,14 @@ const App = ({userStorage,dishes}) => {
           {!authCtx.isLoggedIn && <Route path="/auth" ><AuthForm userStorage={userStorage} redirectLink="/"/></Route>}
          
           <Route path="/mainpage"><MainPage dishLists={dishLists} location={location}/></Route>
-          <Route path="/seller" component={SellerPage} exact/>
+          <Route path="/seller" exact><SellerPage role={authCtx.isSeller} logoutHandler={authCtx.logout}/></Route>
           {/* Protecting front end page */}
        
           <Route path="/seller/auth">
             {!authCtx.isLoggedIn ? <SellerAuth userStorage={userStorage} /> : <Redirect to="/seller/home"/>}      
           </Route>
           <Route path="/seller/home">
-            {authCtx.isLoggedIn ? <SellerHome /> : <Redirect to="/seller/auth" />}
+            {authCtx.isLoggedIn && authCtx.isSeller? <SellerHome /> : <Redirect to="/seller/auth" />}
           </Route>
           <Route path ="/seller/shop/:shopId">
             {authCtx.isLoggedIn ? <ShopDetailPage/> : <Redirect to="/seller/auth" />}
