@@ -29,7 +29,7 @@ class UserStorage {
   }
   async checkRole(user) {
     const url = 'http://localhost:8000/users/signin'
-    console.log('check user role', user)
+    
     const roleCheck = await fetch(url, {
       body: JSON.stringify({ data: user }),
       method: 'POST',
@@ -39,10 +39,10 @@ class UserStorage {
         authtoken: user.idToken,
       },
     })
-    console.log('ROLE CHECK: ', roleCheck)
+   
 
     const userInfo = await roleCheck.json()
-    console.log('USER INFO: ', userInfo)
+  
     return userInfo
   }
   async loginSeller(id, password) {
