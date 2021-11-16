@@ -72,7 +72,7 @@ const SellerAuth = ({ userStorage }) => {
         .loginSeller(enteredEmail, enteredPassword)
         .then((data) => {
           setAdmin(true)
-          console.log('DATA: ', data)
+       
           // solution 1: if statement
           if (data.role === 'seller') {
             const expirationTime = new Date(
