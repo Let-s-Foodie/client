@@ -29,7 +29,7 @@ class UserStorage {
   }
   async checkRole(user) {
     const url = 'http://localhost:8000/users/signin'
-    
+
     const roleCheck = await fetch(url, {
       body: JSON.stringify({ data: user }),
       method: 'POST',
@@ -39,12 +39,30 @@ class UserStorage {
         authtoken: user.idToken,
       },
     })
-   
 
     const userInfo = await roleCheck.json()
-  
+
     return userInfo
   }
+
+  async updateRole(id, role, user) {
+    const url = `http://localhost:8000/users/${id}`
+
+    const roleUpdate = await fetch(url, {
+      body: JSON.stringify({ role }),
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json, text/plain, ',
+        'Content-Type': 'application/json',
+        authtoken: user.authtoken,
+      },
+    })
+
+    const updatedInfo = await roleUpdate.json()
+
+    return updatedInfo
+  }
+
   async loginSeller(id, password) {
     const user = await this.loginwithFirebase(id, password)
     const roles = await this.checkRole(user)

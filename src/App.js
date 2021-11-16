@@ -27,6 +27,7 @@ const App = ({ userStorage, dishes }) => {
   const authCtx = useContext(AuthContext)
   const [dishLists, setDishLists] = useState([])
   const [location, setLocation] = useState({})
+
   const {
     loaded,
     coordinates: { lat, lng },
@@ -114,7 +115,7 @@ const App = ({ userStorage, dishes }) => {
 
         {/* Testing Route for seller agreement page */}
         <Route path="/seller/agreement">
-          <Agreement />
+          <Agreement userStorage={userStorage} />
         </Route>
 
         {/* <Route path ="*"><Redirect to="/"></Redirect></Route> */}
