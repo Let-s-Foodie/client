@@ -21,7 +21,7 @@ const SellerMainHero = () => {
             return res.json();
         })
         .then(resData => {
-            console.log(resData)
+        
             setSellerInfo(resData);
         })
     }

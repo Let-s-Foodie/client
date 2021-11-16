@@ -48,7 +48,7 @@ const Mainbar = ({toggle}) => {
 
                     {isLoggedIn &&
                         <NavBtn onClick={logoutHandler}>
-                            <NavBtnLink to='/seller'>Logout</NavBtnLink> 
+                            <NavBtnLink to='/'>Logout</NavBtnLink> 
                         </NavBtn>
                     }
                     
