@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import {unstable_batchedUpdates} from 'react-dom';
+import { unstable_batchedUpdates } from 'react-dom'
 let logoutTimer
 const AuthContext = React.createContext({
   token: '',
@@ -48,7 +48,7 @@ export const AuthContextProvider = (props) => {
   const [role, setRole] = useState(initialRole)
   const userIsLoggedIn = !!token //if token is a string that is empty, this will return false
   const userIsSeller = role === 'seller' ? true : false
- 
+
   const logoutHandler = useCallback(() => {
     setToken(null)
     setRole(null)
@@ -61,11 +61,11 @@ export const AuthContextProvider = (props) => {
   }, [])
 
   const loginHandler = (token, expirationTime, role) => {
-    unstable_batchedUpdates(()=> {
-        setToken(token);
-        setRole(role);
+    unstable_batchedUpdates(() => {
+      setToken(token)
+      setRole(role)
     })
-   
+
     localStorage.setItem('token', token)
     localStorage.setItem('expirationTime', expirationTime)
     localStorage.setItem('role', role)
@@ -93,4 +93,3 @@ export const AuthContextProvider = (props) => {
 }
 
 export default AuthContext
-

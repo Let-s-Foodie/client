@@ -72,7 +72,6 @@ const SellerAuth = ({ userStorage }) => {
         .loginSeller(enteredEmail, enteredPassword)
         .then((data) => {
           setAdmin(true)
-       
           // solution 1: if statement
           if (data.role === 'seller') {
             const expirationTime = new Date(
@@ -85,6 +84,7 @@ const SellerAuth = ({ userStorage }) => {
             )
             // if (authCtx.isSeller) history.replace('/seller/home')
           } else {
+            localStorage.setItem('userInfo', JSON.stringify(data))
             history.replace('/seller/agreement')
           }
         })

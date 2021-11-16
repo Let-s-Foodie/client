@@ -115,7 +115,7 @@ const App = ({ userStorage, dishes }) => {
 
         {/* Testing Route for seller agreement page */}
         <Route path="/seller/agreement">
-          <Agreement />
+          <Agreement userStorage={userStorage} />
         </Route>
 
         {/* <Route path ="*"><Redirect to="/"></Redirect></Route> */}
