@@ -83,7 +83,7 @@ const SellerAuth = ({ userStorage }) => {
               expirationTime.toISOString(),
               data.role,
             )
-            if (authCtx.isSeller) history.replace('/seller/home')
+            // if (authCtx.isSeller) history.replace('/seller/home')
           } else {
             history.replace('/seller/agreement')
           }

@@ -27,6 +27,7 @@ const App = ({ userStorage, dishes }) => {
   const authCtx = useContext(AuthContext)
   const [dishLists, setDishLists] = useState([])
   const [location, setLocation] = useState({})
+
   const {
     loaded,
     coordinates: { lat, lng },
