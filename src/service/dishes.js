@@ -3,7 +3,7 @@ import axios from 'axios';
 class Dishes {
     constructor() {
         this.dishes = axios.create({
-            baseURL:'http://localhost:8000/dishes'
+            baseURL: 'http://localhost:8000/dishes'
         })
     }
 
@@ -11,6 +11,7 @@ class Dishes {
         const response = await this.dishes.get()
         return response.data;
     }
+
 }
 
 export default Dishes;

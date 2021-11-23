@@ -8,29 +8,6 @@ const Main = ({ dishLists, location }) => {
   const [foodInfo, setFoodinfo] = useState([])
   const [lengthCheck, setLength] = useState([])
 
-  // useEffect(() => {
-
-  //   //const URL = "http://localhost:8000/yelp/dishes";
-  //   const URL ="http://localhost:8000/random/feeds"
-  //   fetch(URL, {
-  //     method: 'GET',
-
-  //   })
-  //   .then((res)=>{
-  //     console.log(res)
-  //     return res.json()})
-  //   .then((data)=> {
-
-  //   console.log(data)
-  //   setFoodinfo(data);
-  //   if(foodInfo.length <= 1) setLength("loading")
-  //   })
-  //   return () => {
-  //     setFoodinfo({});
-  //     setLength();
-  //   }
-
-  // },[lengthCheck,foodInfo.length])
   useEffect(() => {
     setFoodinfo(dishLists)
     if (foodInfo.length <= 1) setLength('loading')
