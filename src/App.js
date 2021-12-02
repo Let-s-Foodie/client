@@ -1,11 +1,10 @@
-import { React, useContext, useEffect, useState } from 'react'
+import { React, useContext, useEffect, useState, useCallback } from 'react'
 
 import MainPage from './pages/MainPage'
 import {
   BrowserRouter as Router,
   Route,
   Switch,
-  useParams,
   Redirect,
 } from 'react-router-dom'
 import AuthForm from './component/AuthForm/AuthForm'
@@ -14,7 +13,7 @@ import SellerHome from './pages/SellerHome'
 import SellerResgisterPage from './pages/SellerRegisterPage'
 import DishForm from '../src/component/DishForm/DishForm.jsx'
 import AuthContext from './store/auth-context'
-import Home from './pages/home'
+import Home from './pages/Home'
 import SellerAuth from '../src/component/AuthForm/SellerAuth'
 import ImageUploader from './service/image_uploader'
 import ShopDetailPage from './pages/ShopDetailPage'
@@ -33,19 +32,10 @@ const App = ({ userStorage, dishes }) => {
     coordinates: { lat, lng },
   } = useGeoLocation()
 
-  const yelp = new Yelp(lat, lng)
-  /** local database,
-   * [{}]
-   * category
-   * id
-   * image
-   * name
-   * sellerId
-   */
-  /** yelp
-   * {businesses [{}],...}
-   */
-  //setDishLists(data)
+  const yelp = useCallback(() => {
+    return new Yelp(lat, lng)
+  }, [lat, lng])
+
   useEffect(() => {
     const dishArr = []
     dishes.getAll().then((dishes) => {
@@ -58,7 +48,7 @@ const App = ({ userStorage, dishes }) => {
         setLocation({ lat, lng })
       })
     }
-  }, [dishes, loaded])
+  }, [dishes, lat, lng, yelp, loaded])
   return (
     <Router>
       <Switch>
@@ -75,7 +65,6 @@ const App = ({ userStorage, dishes }) => {
         <Route path="/seller" exact>
           <SellerPage role={authCtx.isSeller} logoutHandler={authCtx.logout} />
         </Route>
-        {/* Protecting front end page */}
 
         <Route path="/seller/auth">
           {!authCtx.isLoggedIn ? (
@@ -113,12 +102,9 @@ const App = ({ userStorage, dishes }) => {
           )}
         </Route>
 
-        {/* Testing Route for seller agreement page */}
         <Route path="/seller/agreement">
           <Agreement userStorage={userStorage} />
         </Route>
-
-        {/* <Route path ="*"><Redirect to="/"></Redirect></Route> */}
       </Switch>
     </Router>
   )

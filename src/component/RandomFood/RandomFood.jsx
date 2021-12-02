@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import RestaurantModal from '../UI/RestaurantModal'
 import HashTagModal from '../UI/HashTagModal'
 import Aux from '../hoc/hoc'
+
 const RandomFood = ({
   title,
   image,
@@ -18,7 +19,6 @@ const RandomFood = ({
     setDetail([])
   }
 
-  //feature-1.2.2
   const displayDetail = () => {
     const businessesDetail = {
       name: title,
@@ -29,9 +29,6 @@ const RandomFood = ({
   }
 
   const hashtagHandler = (hash) => {
-    // Review UI
-    // Change localhost from 5000 to 8000
-    // Change URL from random to yelp
     const URL = 'http://localhost:5000/random/detail'
     const data = {
       title: hash,
@@ -65,7 +62,7 @@ const RandomFood = ({
   return (
     <Aux>
       <div className="max-w-md rounded overflow-hidden shadow-lg my-3">
-        <img alt="food" className="w-full" src={image} />
+        <img className="w-full" src={image} alt="food" />
         <div className="px-6 py-4">
           <div className="font-bold text-xl mb-2">{title}</div>
         </div>
@@ -91,9 +88,7 @@ const RandomFood = ({
           >
             #{title}
           </span>
-          <span className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer mr-2">
-            {/* onClick={() => hashtagHandler(seller.name)}>#{seller.name} */}
-          </span>
+          <span className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer mr-2"></span>
           <span
             className="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker text-blue-600 cursor-pointer"
             onClick={() => hashtagHandler(category)}

@@ -1,31 +1,30 @@
-import axios from 'axios';
+import axios from 'axios'
 
 class Yelp {
-    constructor(lat, lng) {
-        this.yelp = axios.create({
-            baseURL: "http://localhost:8000/yelp",
-        })
-        this.lat = lat;
-        this.lng = lng;
-    }
+  constructor(lat, lng) {
+    this.yelp = axios.create({
+      baseURL: 'http://localhost:8000/yelp',
+    })
+    this.lat = lat
+    this.lng = lng
+  }
 
-    async getAll() {
-        const response = await this.yelp.post('/dishes', {
-            lat: this.lat,
-            lng: this.lng
-        })
-        return response.data;
-    }
+  async getAll() {
+    const response = await this.yelp.post('/dishes', {
+      lat: this.lat,
+      lng: this.lng,
+    })
+    return response.data
+  }
 
-    async searchLocation() {
-        const response = await this.yelp.post('/local', {
-            lat: this.lat,
-            lng: this.lng
-        })
+  async searchLocation() {
+    const response = await this.yelp.post('/local', {
+      lat: this.lat,
+      lng: this.lng,
+    })
 
-        return response.data
-    }
-
+    return response.data
+  }
 }
 
-export default Yelp;
+export default Yelp

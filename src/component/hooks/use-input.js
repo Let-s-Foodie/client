@@ -1,48 +1,38 @@
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
-const useInput = (validateValue,values) => {
-    const [enteredValue, setEnterValue] = useState('');
-    const [isTouched, setIsTouched] = useState(false);
+const useInput = (validateValue, values) => {
+  const [enteredValue, setEnterValue] = useState('')
+  const [isTouched, setIsTouched] = useState(false)
 
-    let valueIsValid = validateValue(enteredValue);
-   
-    const hasError = !valueIsValid && isTouched;
-   
-    const valueChangeHandler = (event) => {
-     
-        setEnterValue(event.target.value);
-      
-    };
-     useEffect(()=>{
-       
-        if(values){
-          
-           setEnterValue(values)
-           setIsTouched(true)
-         
-        }
-        
-    },[])
-    const inputBlurHandler = (event) => {
-     
-        setIsTouched(true); 
-        
-       
-    };
+  let valueIsValid = validateValue(enteredValue)
 
-    const reset = () => {
-        setEnterValue('');
-        setIsTouched(false);
-    };
-    return {
-        value: enteredValue,
-        isValid: valueIsValid,
-        hasError,
-        valueChangeHandler,
-        inputBlurHandler,
-        reset
-    };
-};
+  const hasError = !valueIsValid && isTouched
 
+  const valueChangeHandler = (event) => {
+    setEnterValue(event.target.value)
+  }
+  useEffect(() => {
+    if (values) {
+      setEnterValue(values)
+      setIsTouched(true)
+    }
+  }, [values])
+  const inputBlurHandler = (event) => {
+    setIsTouched(true)
+  }
 
-export default useInput;
+  const reset = () => {
+    setEnterValue('')
+    setIsTouched(false)
+  }
+  return {
+    value: enteredValue,
+    isValid: valueIsValid,
+    hasError,
+    valueChangeHandler,
+    inputBlurHandler,
+    reset,
+  }
+}
+
+export default useInput

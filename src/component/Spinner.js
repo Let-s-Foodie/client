@@ -1,17 +1,17 @@
-import styled, { keyframes } from "styled-components";
+import styled from 'styled-components'
 
 const Spinner = styled.svg`
   animation: rotate 2s linear infinite;
   margin: 50px 50px 50px 50px;
   width: 100px;
   height: 100px;
- 
+
   & .path {
-    stroke: rgb(214,35,0);
+    stroke: rgb(214, 35, 0);
     stroke-linecap: round;
     animation: dash 1.5s ease-in-out infinite;
   }
-  
+
   @keyframes rotate {
     100% {
       transform: rotate(360deg);
@@ -31,5 +31,5 @@ const Spinner = styled.svg`
       stroke-dashoffset: -124;
     }
   }
-`;
-export default Spinner;
+`
+export default Spinner

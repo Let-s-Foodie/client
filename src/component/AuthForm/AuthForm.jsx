@@ -2,9 +2,7 @@ import { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import AuthContext from '../../store/auth-context'
 import useInput from '../hooks/use-input'
-import ErrorSeller from './Error/ErrorSeller.jsx'
 import ErrorAuth from './Error/ErrorAuth'
-
 const emailPattern = new RegExp(
   /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i,
 )
@@ -12,17 +10,17 @@ const passwordPattern = new RegExp(/^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{8,}$/)
 const isEmail = (value) => emailPattern.test(value)
 const isPassword = (value) => passwordPattern.test(value)
 
-const SellerAuth = ({ userStorage }) => {
-  const [isAdmin, setAdmin] = useState(true)
+const AuthForm = ({ redirectLink, userStorage }) => {
   const [isLogin, setIsLogin] = useState(true)
+  const [authError, setError] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+
   const authCtx = useContext(AuthContext)
   const history = useHistory()
-  const [authError, setError] = useState(false)
-
   const cancleHandler = () => {
     setError(false)
   }
+
   const {
     value: enteredEmail,
     isValid: emailIsValid,
@@ -52,59 +50,51 @@ const SellerAuth = ({ userStorage }) => {
     passwordIsValid || isLogin
       ? 'rounded-sm px-4 py-3 mt-3 focus:outline-none bg-gray-100 w-full'
       : 'rounded-sm px-4 py-3 mt-3 focus:outline-none bg-red-100 w-full'
-  const buttonClasses = !formIsValid
-    ? 'block text-center text-white bg-gray-400 p-3 duration-300 rounded-sm hover:bg-black w-full'
-    : 'block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full'
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState)
-    setAdmin(true)
     setError(false)
+    resetEmail()
+    resetPassword()
   }
 
   const submitHandler = (event) => {
     event.preventDefault()
-
-    //Add Validation
-
     if (isLogin) {
-      //Check user's role
       userStorage
-        .loginSeller(enteredEmail, enteredPassword)
+        .loginUser(enteredEmail, enteredPassword)
         .then((data) => {
-          setAdmin(true)
-          // solution 1: if statement
-          if (data.role === 'seller') {
-            const expirationTime = new Date(
-              new Date().getTime() + +data.data.expiresIn * 1000,
-            )
-            authCtx.login(
-              data.data.idToken,
-              expirationTime.toISOString(),
-              data.role,
-            )
-            // if (authCtx.isSeller) history.replace('/seller/home')
-          } else {
-            localStorage.setItem('userInfo', JSON.stringify(data))
-            history.replace('/seller/agreement')
-          }
+          const expirationTime = new Date(
+            new Date().getTime() + +data.user.expiresIn * 1000,
+          )
+          authCtx.login(
+            data.user.idToken,
+            expirationTime.toISOString(),
+            data.role,
+          )
+          history.replace(`${redirectLink}`)
         })
         .catch((err) => {
+          console.log('error from authform', err)
           setErrorMsg(err.message)
           setError(true)
         })
-      //resetEmail();
-      //resetPassword();
+      resetEmail()
+      resetPassword()
     } else {
       if (!formIsValid) {
         return
       }
+
       userStorage
         .signupFirebase(enteredEmail, enteredPassword)
         .then((data) => {
-          userStorage.signupLocal(data, 'seller')
-          history.replace('/seller')
+          userStorage.signupLocal(data, 'user')
+          history.replace('/')
         })
-        .catch(console.log)
+        .catch((err) => {
+          setError(err)
+          setError(true)
+        })
     }
   }
   return (
@@ -116,8 +106,6 @@ const SellerAuth = ({ userStorage }) => {
           ) : (
             <></>
           )}
-          {isAdmin ? <></> : <ErrorSeller />}
-
           <h1 className="font-medium text-2xl mt-3 text-center">
             {isLogin ? 'Login' : 'Create an Account'}
           </h1>
@@ -134,6 +122,7 @@ const SellerAuth = ({ userStorage }) => {
                 placeholder="Email"
                 onChange={emailChangeHandler}
                 onBlur={emailBlurHandler}
+                value={enteredEmail}
               />
               {!isLogin && emailHasError && (
                 <small>Email must be in valid format.</small>
@@ -148,6 +137,7 @@ const SellerAuth = ({ userStorage }) => {
                 id="password"
                 className={passwordClasses}
                 placeholder="Password"
+                value={enteredPassword}
                 onChange={passwordChangeHandler}
                 onBlur={passwordBlurHandler}
               />
@@ -165,7 +155,10 @@ const SellerAuth = ({ userStorage }) => {
                 Login{' '}
               </button>
             ) : (
-              <button className={buttonClasses} disabled={!formIsValid}>
+              <button
+                className="block text-center text-white bg-gray-800 p-3 duration-300 rounded-sm hover:bg-black w-full"
+                disabled={!formIsValid}
+              >
                 Create Account{' '}
               </button>
             )}
@@ -229,4 +222,5 @@ const SellerAuth = ({ userStorage }) => {
     </section>
   )
 }
-export default SellerAuth
+
+export default AuthForm
