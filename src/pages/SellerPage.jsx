@@ -16,9 +16,12 @@ const SellerPage = ({ role, logoutHandler }) => {
       history.replace('/seller/home')
     }
   }, [history, role, logoutHandler])
+
   return (
     <>
-      <Navbar {...sellerBar} />
+      <Navbar
+        {...sellerBar}
+      />
 
       <SellerHeroSection />
       <InfoSection {...homeObjOne} />

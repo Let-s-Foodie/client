@@ -25,15 +25,12 @@ const Navbar = ({ logoContent, logoLink }) => {
             <NavItem>
               <NavLinks to="/seller/home">About</NavLinks>
             </NavItem>
-            <NavItem>
-              <NavLinks to="/seller/home">About</NavLinks>
-            </NavItem>
           </NavMenu>
           <NavBtn>
             <Dropdown
               logoutHandler={logoutHandler}
-              user="Abby"
               logoutLink="/seller"
+
             />
           </NavBtn>
         </NavbarContainer>

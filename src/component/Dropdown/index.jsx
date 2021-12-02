@@ -1,4 +1,5 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useMemo, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import {
   Menucontainer,
   MenuTrigger,
@@ -11,10 +12,15 @@ import {
 } from './DropdownElement'
 import { useDetectOutsideClick } from './useDetectOutsideClick'
 
-const Dropdown = ({ logoutHandler, user, logoutLink }) => {
+const Dropdown = ({ logoutHandler, logoutLink }) => {
   const dropdownRef = useRef(null)
   const [isActive, setIsActive] = useDetectOutsideClick(dropdownRef, false)
   const toggleActive = () => setIsActive(!isActive)
+  const location = useLocation()
+
+  const accountLink = useMemo(() =>
+    localStorage.getItem('role') == 'seller' ? `Go To Seller Page` : ``
+    , [])
 
   return (
     <Menucontainer>
@@ -27,9 +33,12 @@ const Dropdown = ({ logoutHandler, user, logoutLink }) => {
           <Navli>
             <NavA to="/account">My Account</NavA>
           </Navli>
-          <Navli>
-            <NavA to="/seller">Start a Selling Account</NavA>
-          </Navli>
+          {location.pathname != "/seller/home"
+            &&
+            <Navli>
+              <NavA to="/seller">{accountLink}</NavA>
+            </Navli>
+          }
           <Navli>
             <NavA to={logoutLink} onClick={logoutHandler}>
               Sign Out
