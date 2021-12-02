@@ -1,4 +1,4 @@
-import { React, useContext, useEffect, useState, useCallback } from 'react'
+import { React, useContext, useEffect, useState, useMemo } from 'react'
 
 import MainPage from './pages/MainPage'
 import {
@@ -32,7 +32,7 @@ const App = ({ userStorage, dishes }) => {
     coordinates: { lat, lng },
   } = useGeoLocation()
 
-  const yelp = useCallback(() => {
+  const yelp = useMemo(() => {
     return new Yelp(lat, lng)
   }, [lat, lng])
 

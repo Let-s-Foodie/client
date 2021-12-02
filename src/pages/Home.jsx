@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Sidebar from '../component/Sidebar'
 import Navbar from '../component/Navbar'
 import HeroSection from '../component/HeroSection'
@@ -9,6 +9,7 @@ import { homeBar } from '../component/Navbar/Data'
 import Services from '../component/Services'
 import useGeoLocation from '../component/hooks/useGeoLocation'
 import Footer from '../component/Footer'
+import Yelp from '../service/yelp'
 
 const Home = () => {
   const [local, setLocal] = useState([])
@@ -22,27 +23,17 @@ const Home = () => {
     coordinates: { lat, lng },
   } = useGeoLocation()
 
+  const yelp = useMemo(() => new Yelp(lat, lng), [lat, lng])
+
   useEffect(() => {
     if (loaded) {
-      const URL = 'http://localhost:8000/yelp/local'
-      fetch(URL, {
-        method: 'POST',
-        body: JSON.stringify({ lat: lat, lng: lng }),
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-        },
+      yelp.searchLocation().then(({ data }) => {
+        setLocal(data)
+        setLoadedLocal(true)
       })
-        .then((res) => {
-          return res.json()
-        })
-        .then((resData) => {
-          setLocal(resData.data)
-          setLoadedLocal(true)
-        })
     }
     return function cleanup() {}
-  }, [loaded, lat, lng])
+  }, [loaded, lat, lng, yelp])
   return (
     <>
       <Sidebar isOpen={isOpen} toggle={toggle} {...homeSidebar} />
