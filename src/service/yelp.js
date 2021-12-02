@@ -16,6 +16,15 @@ class Yelp {
     })
     return response.data
   }
+
+  async searchLocation() {
+    const response = await this.yelp.post('/local', {
+      lat: this.lat,
+      lng: this.lng,
+    })
+
+    return response.data
+  }
 }
 
 export default Yelp
