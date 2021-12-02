@@ -9,6 +9,7 @@ import { homeBar } from '../component/Navbar/Data'
 import Services from '../component/Services'
 import useGeoLocation from '../component/hooks/useGeoLocation'
 import Footer from '../component/Footer'
+
 const Home = () => {
   const [local, setLocal] = useState([])
   const [isOpen, setIsOpen] = useState(false)
