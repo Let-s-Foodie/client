@@ -59,20 +59,6 @@ const Main = ({ dishLists, location }) => {
             category={foodFeed.category}
           />
         )}
-
-        {foodFeed.title ? (
-          <RandomFood
-            title={foodFeed.title}
-            image={foodFeed.image}
-            lat={lat}
-            lng={lng}
-            randomHandler={foodListHandler}
-            seller={foodFeed.seller}
-            category={foodFeed.category}
-          />
-        ) : (
-          <div></div>
-        )}
       </section>
     </Aux>
   )

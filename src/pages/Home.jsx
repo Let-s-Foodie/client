@@ -32,7 +32,7 @@ const Home = () => {
         setLoadedLocal(true)
       })
     }
-    return function cleanup() { }
+    return function cleanup() {}
   }, [loaded, lat, lng, yelp])
   return (
     <>

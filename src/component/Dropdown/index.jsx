@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useEffect } from 'react'
+import React, { useRef, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   Menucontainer,
@@ -18,9 +18,11 @@ const Dropdown = ({ logoutHandler, logoutLink }) => {
   const toggleActive = () => setIsActive(!isActive)
   const location = useLocation()
 
-  const accountLink = useMemo(() =>
-    localStorage.getItem('role') == 'seller' ? `Go To Seller Page` : ``
-    , [])
+  const accountLink = useMemo(
+    () =>
+      localStorage.getItem('role') === 'seller' ? `Go To Seller Page` : ``,
+    [],
+  )
 
   return (
     <Menucontainer>
@@ -33,12 +35,11 @@ const Dropdown = ({ logoutHandler, logoutLink }) => {
           <Navli>
             <NavA to="/account">My Account</NavA>
           </Navli>
-          {location.pathname != "/seller/home"
-            &&
+          {location.pathname !== '/seller/home' && (
             <Navli>
               <NavA to="/seller">{accountLink}</NavA>
             </Navli>
-          }
+          )}
           <Navli>
             <NavA to={logoutLink} onClick={logoutHandler}>
               Sign Out
