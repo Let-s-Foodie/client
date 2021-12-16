@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useState } from 'react'
-import useInput from '../hooks/use-input'
+import React, { useRef, useEffect, useState } from "react";
+import useInput from "../hooks/use-input";
 
-const isEmpty = (value) => value.trim() !== ''
+const isEmpty = (value) => value.trim() !== "";
 
 const BusinessClaim = ({ values, nextStep, handleChange }) => {
-  const [formIsvalid, setFormIsvalid] = useState(false)
-  let countryRef = useRef()
+  const [formIsvalid, setFormIsvalid] = useState(false);
+  let countryRef = useRef();
 
   const {
     value: enteredName,
@@ -13,7 +13,7 @@ const BusinessClaim = ({ values, nextStep, handleChange }) => {
     hasError: nameHasError,
     valueChangeHandler: nameChangeHandler,
     inputBlurHandler: nameBlurHandler,
-  } = useInput(isEmpty, values.business)
+  } = useInput(isEmpty, values.business);
 
   const {
     value: enteredStreet,
@@ -21,38 +21,38 @@ const BusinessClaim = ({ values, nextStep, handleChange }) => {
     hasError: streetHasError,
     valueChangeHandler: streetChangeHandler,
     inputBlurHandler: streetBlurHandler,
-  } = useInput(isEmpty, values.street)
+  } = useInput(isEmpty, values.street);
   const {
     value: enteredCity,
     isValid: cityIsValid,
     hasError: cityHasError,
     valueChangeHandler: cityChangeHandler,
     inputBlurHandler: cityBlurHandler,
-  } = useInput(isEmpty, values.city)
+  } = useInput(isEmpty, values.city);
   const {
     value: enteredState,
     isValid: stateIsValid,
     hasError: stateHasError,
     valueChangeHandler: stateChangeHandler,
     inputBlurHandler: stateBlurHandler,
-  } = useInput(isEmpty, values.state)
+  } = useInput(isEmpty, values.state);
   const {
     value: enteredZip,
     isValid: zipcodeIsValid,
     hasError: zipcodeHasError,
     valueChangeHandler: zipcodeChangeHandler,
     inputBlurHandler: zipcodeBlurHandler,
-  } = useInput(isEmpty, values.zipcode)
+  } = useInput(isEmpty, values.zipcode);
 
   const beforeUnloadListener = (event) => {
-    event.preventDefault()
-    return (event.returnValue = 'Are you sure you want to exit?')
-  }
+    event.preventDefault();
+    return (event.returnValue = "Are you sure you want to exit?");
+  };
   if (window.performance) {
     if (performance.navigation.type === 1 && enteredName) {
-      window.addEventListener('beforeunload', beforeUnloadListener, {
+      window.addEventListener("beforeunload", beforeUnloadListener, {
         capture: true,
-      })
+      });
     }
   }
   useEffect(() => {
@@ -63,25 +63,25 @@ const BusinessClaim = ({ values, nextStep, handleChange }) => {
       zipcodeIsValid &&
       streetIsValid
     ) {
-      setFormIsvalid(true)
+      setFormIsvalid(true);
     } else {
-      setFormIsvalid(false)
+      setFormIsvalid(false);
     }
-  }, [nameIsValid, cityIsValid, stateIsValid, zipcodeIsValid, streetIsValid])
+  }, [nameIsValid, cityIsValid, stateIsValid, zipcodeIsValid, streetIsValid]);
 
   const submitHandler = (event) => {
-    event.preventDefault()
-    if (!formIsvalid) return
-    const enteredCountry = countryRef.current.value
+    event.preventDefault();
+    if (!formIsvalid) return;
+    const enteredCountry = countryRef.current.value;
 
-    handleChange('business', enteredName)
-    handleChange('country', enteredCountry)
-    handleChange('street', enteredStreet)
-    handleChange('city', enteredCity)
-    handleChange('zipcode', enteredZip)
-    handleChange('state', enteredState)
-    nextStep()
-  }
+    handleChange("business", enteredName);
+    handleChange("country", enteredCountry);
+    handleChange("street", enteredStreet);
+    handleChange("city", enteredCity);
+    handleChange("zipcode", enteredZip);
+    handleChange("state", enteredState);
+    nextStep();
+  };
 
   return (
     <>
@@ -256,7 +256,7 @@ const BusinessClaim = ({ values, nextStep, handleChange }) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default BusinessClaim
+export default BusinessClaim;
