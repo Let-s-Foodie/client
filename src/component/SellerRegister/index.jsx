@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { Route } from 'react-router-dom'
-import img from '../../static/svg-1.svg'
-import BusinessClaim from './BusinessClaim'
-import SnsClaim from './SnsClaim'
+import React, { useState } from "react";
+import { Route } from "react-router-dom";
+import img from "../../static/svg-1.svg";
+import BusinessClaim from "./BusinessClaim";
+import SnsClaim from "./SnsClaim";
 import {
   Container,
   Wrapper,
@@ -11,25 +11,25 @@ import {
   Column2,
   ImgWrap,
   Img,
-} from './RegisterElement'
+} from "./RegisterElement";
 
 const SellerRegister = ({ lightBg, imgStart }) => {
   const [registerSteps, setSteps] = useState({
     step: 1, // it should be updated
-    business: '',
-    country: '',
-    street: '',
-    city: '',
-    state: '',
-    zipcode: '',
-    instagram: '',
-    facebook: '',
-    yelp: '',
-    homepage: '',
-    youtube: '',
-  })
-
-  const { step } = registerSteps
+    business: "",
+    country: "",
+    street: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    instagram: "",
+    facebook: "",
+    yelp: "",
+    homepage: "",
+    youtube: "",
+  });
+  // console.log("registerSteps", registerSteps);
+  const { step } = registerSteps;
 
   const {
     business,
@@ -43,7 +43,7 @@ const SellerRegister = ({ lightBg, imgStart }) => {
     yelp,
     homepage,
     youtube,
-  } = registerSteps
+  } = registerSteps;
   const values = {
     business,
     country,
@@ -56,21 +56,21 @@ const SellerRegister = ({ lightBg, imgStart }) => {
     yelp,
     homepage,
     youtube,
-  }
+  };
 
   const nextStep = () => {
-    const { step } = registerSteps
-    setSteps((previousInputs) => ({ ...previousInputs, step: step + 1 }))
-  }
+    const { step } = registerSteps;
+    setSteps((previousInputs) => ({ ...previousInputs, step: step + 1 }));
+  };
 
   const prevStep = () => {
-    const { step } = registerSteps
-    setSteps((previousInputs) => ({ ...previousInputs, step: step - 1 }))
-  }
+    const { step } = registerSteps;
+    setSteps((previousInputs) => ({ ...previousInputs, step: step - 1 }));
+  };
 
   const handleChange = (input, value) => {
-    setSteps((previousInputs) => ({ ...previousInputs, [input]: value }))
-  }
+    setSteps((previousInputs) => ({ ...previousInputs, [input]: value }));
+  };
   const RegisterForm = () => {
     switch (step) {
       case 1:
@@ -82,7 +82,7 @@ const SellerRegister = ({ lightBg, imgStart }) => {
               handleChange={handleChange}
             />
           </Route>
-        )
+        );
 
       case 2:
         return (
@@ -94,11 +94,11 @@ const SellerRegister = ({ lightBg, imgStart }) => {
               handleChange={handleChange}
             />
           </Route>
-        )
+        );
       default:
-        break
+        break;
     }
-  }
+  };
 
   return (
     <>
@@ -117,7 +117,7 @@ const SellerRegister = ({ lightBg, imgStart }) => {
         </Wrapper>
       </Container>
     </>
-  )
-}
+  );
+};
 
-export default SellerRegister
+export default SellerRegister;
