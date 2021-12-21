@@ -22,7 +22,7 @@ import useGeoLocation from "./component/hooks/useGeoLocation";
 import Agreement from "./component/Agreement/Agreement";
 import SellerRoute from "./pages/SellerRoute/SellerRoute";
 const App = ({ userStorage, dishes }) => {
-  console.log("App.js");
+
   const authCtx = useContext(AuthContext);
   const [dishLists, setDishLists] = useState([]);
   const [location, setLocation] = useState({});
@@ -32,9 +32,6 @@ const App = ({ userStorage, dishes }) => {
     coordinates: { lat, lng },
   } = useGeoLocation();
 
-  // const loaded = true;
-  // const lat = 2;
-  // const lng = 3;
   const imageUploader = useMemo(() => {
     return new ImageUploader();
   }, []);
@@ -43,12 +40,12 @@ const App = ({ userStorage, dishes }) => {
   }, [lat, lng]);
 
   useEffect(() => {
-    console.log("useEffect from App.js");
+
     const dishArr = [];
     dishes.getAll().then((dishes) => {
       dishes.map((dish) => dishArr.push(dish));
     });
-    console.log("useEffect loaded", loaded);
+
     if (loaded) {
       yelp.getAll().then((data) => {
         data.data.map((item) => dishArr.push(item));
@@ -105,9 +102,13 @@ const App = ({ userStorage, dishes }) => {
             <Redirect to="/seller/auth" />
           )}
         </Route>
-        <Route path="/seller/register/:step">
-          <SellerRoute loaded={loaded} />
-        </Route>
+        {/* <Route path="/seller/register/:step"> */}
+        <SellerRoute
+          loaded={loaded}
+          path={"/seller/register/:step"}
+          component={SellerRegisterPage}
+        />
+        {/* </Route> */}
 
         <Route path="/seller/agreement">
           <Agreement userStorage={userStorage} />
