@@ -20,7 +20,7 @@ const Dropdown = ({ logoutHandler, logoutLink }) => {
 
   const accountLink = useMemo(
     () =>
-      localStorage.getItem('role') === 'seller' ? `Go To Seller Page` : ``,
+      localStorage.getItem('role') === 'seller' ? `Go To My Seller Account` : `Go To Seller Page`,
     [],
   )
 
